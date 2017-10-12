@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "Role";
+}
+
+<h2>Edit</h2>
+
+<hr />
+
+@Html.Partial("_Edit")
+
+@section scripts
+{
+    <script src="~/Scripts/bootstrapValidator.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#form').find(':submit').val('Update');
+
+            $.getJSON('/json')
+                .done(function (data, textStatus, jqXHR) {
+                    $('#form').deserializeObject(data[0]);
+
+                    $('#form').bootstrapValidator()
+                        .on('success.form.bv', function (event) {
+                            event.preventDefault();
+                            var $form = $(event.target);
+                            var bv = $form.data('bootstrapValidator');
+                            var obj = $form.serializeObject();
+                            $.put('/json', obj)
+                                .done(function (data, textStatus, jqXHR) {
+                                    var redirect = bv.$submitButton.attr("data-redirect-url") + window.location.search;
+                                    window.location.href = redirect;
+                                })
+                                .fail(function (jqXHR, textStatus, errorThrown) {
+                                    $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                                });
+                        });
+                });
+
+        });
+    </script>
+}

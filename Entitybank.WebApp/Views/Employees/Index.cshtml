@@ -1,0 +1,119 @@
+﻿
+@{
+    ViewBag.Title = "Employees";
+}
+
+<br />
+
+<div>
+    <form class="form-inline" style="margin-left:8px">
+        <div class="form-group" style="margin-right:20px">
+            <label class="control-label">Name&nbsp;</label>
+            <input name="Name" class="form-control" />
+        </div>
+        <div class="form-group" style="margin-right:20px">
+            <label class="control-label">Gender&nbsp;</label>
+            <select data-name="genders" data-empty-html="&nbsp;All" name="Gender" class="form-control">
+                <option value="{{Id}}">&nbsp;{{Name}}&nbsp;&nbsp;</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Tel / Mobile / Email&nbsp;</label>
+            <input name="Contact" class="form-control" />
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-info"
+                    data-plugin="filterer"
+                    data-value-elements="Name,Gender,Contact">
+                <i class="glyphicon glyphicon-search"></i>&nbsp;Query
+            </button>
+        </div>
+    </form>
+
+    <br />
+
+    <input name="header" id="header" type="hidden" value="0" />
+    <input name="updown" id="updown" type="hidden" value="1" />
+    <table style="margin-top:2px" class="table table-bordered table-condensed">
+        <thead data-plugin="tableHeadSorter" data-header-element="header" data-updown-element="updown">
+            <tr>
+                <th class="sort-both" data-header="1">Name</th>
+                <th class="sort-both" data-header="2">Gender</th>
+                <th class="sort-both" data-header="3">Birthdate</th>
+                <th class="sort-both" data-header="4">Tel</th>
+                <th class="sort-both" data-header="5">Mobile</th>
+                <th class="sort-both" data-header="6">Email</th>
+                <th>
+                    <a href="/Admin/Employees/Create">
+                        <i class="glyphicon glyphicon-new-window"></i>&nbsp;Create
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody data-plugin="renderer" class="invisible">
+            <tr>
+                <td>{{Name}}</td>
+                <td>{{GenderName}}</td>
+                <td>{{Birthdate}}</td>
+                <td>{{Tel}}</td>
+                <td>{{Mobile}}</td>
+                <td>{{Email}}</td>
+                <td>
+                    <a href="/Admin/Employees/Edit/{{Id}}{{window.location.search}}">
+                        <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                    </a>
+                    <span>&nbsp;</span>
+                    <a href="/Admin/Employees/Delete/{{Id}}{{window.location.search}}">
+                        <i class="glyphicon glyphicon-remove"></i>&nbsp;Delete
+                    </a>
+                    <span>&nbsp;</span>
+                    <a href="/Admin/Employees/Details/{{Id}}">
+                        <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Details
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <hr style="margin-top: 0px; padding-top: 0px; border-top: 2px solid #dddddd" />
+
+    <span data-plugin="paginationInfo" style="margin-right: 32px; margin-top: 8px; float: left" data-html="{{itemCount}} results"></span>
+
+    <ul data-plugin="pagination" style="display: inline" class="pagination"></ul>
+
+    <label style="margin-left: 16px">To</label>
+    <input id="paginationGoValue" class="form-control input-sm" type="number" min="1" max="50" style="padding: 0px; padding-left: 4px; height: 28px; width: 42px; display: inline" />
+    <button data-plugin="paginationGo" style="margin-bottom: 0px" class="btn btn-info btn-sm" type="button"
+            data-value-element="paginationGoValue">
+        Go
+    </button>
+
+    <div class="pull-right">
+        <label>Size</label>
+        <select data-plugin="pageSizer" name="pageSize" class="form-control input-sm" style="padding-left: 10px; padding-right: 2px; width: 60px; display: inline-block">
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+        </select>
+    </div>
+</div>
+
+@section styles
+{
+    <link href="~/frontend/xfront/css/xfront.css" rel="stylesheet" />
+}
+
+@section scripts
+{
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('select[data-name]').initializer();
+
+            $('body').pagingQuerier();
+        });
+    </script>
+}

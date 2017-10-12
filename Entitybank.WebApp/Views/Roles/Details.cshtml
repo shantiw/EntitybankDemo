@@ -1,0 +1,61 @@
+﻿
+@{
+    ViewBag.Title = "Role";
+}
+
+<h2>Details</h2>
+
+<hr />
+
+@Html.Partial("_Details")
+
+<hr />
+
+<div class="row">
+    <div class="col-sm-2">
+        <label class="pull-right">Users:</label>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-offset-2 col-sm-10">
+        <table id="table" class="table">
+            <thead>
+                <tr>
+                    <th>User name</th>
+                    <th>Name</th>
+                    <th>Gender</th>
+                    <th>Email</th>
+                    <th>Mobile</th>
+                </tr>
+            </thead>
+            <tbody data-plugin="renderer" class="invisible">
+                <tr>
+                    <td>{{UserName}}</td>
+                    <td>{{Name}}</td>
+                    <td>{{GenderName}}</td>
+                    <td>{{Email}}</td>
+                    <td>{{Mobile}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.getJSON('/json', {}, function (data, textStatus, jqXHR) {
+                $('#details').renderer(data);
+            });
+
+            $.getJSON('/json?name=users', {}, function (data, textStatus, jqXHR) {
+                $('#table tbody').renderer(data);
+            });
+        });
+    </script>
+}
