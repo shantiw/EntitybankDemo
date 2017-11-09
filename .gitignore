@@ -5,8 +5,8 @@
 /.vs
 /packages
 
-/Entitybank.WebApp.Services/obj
-/Entitybank.WebApp.Services/bin
+/Entitybank.Services/obj
+/Entitybank.Services/bin
 
 /Entitybank.WebApp/bin
 /Entitybank.WebApp/obj
@@ -18,13 +18,10 @@
 /Entitybank.Client/bin
 /Entitybank.Client/obj
 
-/Entitybank.Client.Services/bin
-/Entitybank.Client.Services/obj
-
 /Entitybank.WpfApp/obj
 /Entitybank.WpfApp/bin
 
-Entitybank.WpfApp.sln
+/Entitybank.WpfApp.sln
 /Entitybank.Client
-Entitybank.Client.Services
 /Entitybank.WpfApp
+
