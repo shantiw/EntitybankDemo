@@ -18,7 +18,7 @@ namespace XData.Data.Services
     {
         public DynDatabase Database { get; private set; }
 
-        protected readonly DynModifier Modifier;
+        public DynModifier Modifier { get; private set; }
 
         public JsonService(IEnumerable<KeyValuePair<string, string>> keyValues)
             : this(ConfigurationManager.ConnectionStrings[0].Name, keyValues)
@@ -59,11 +59,11 @@ namespace XData.Data.Services
                 IEnumerable<string> jsonCollection;
                 if (ds.Expands == null || ds.Expands.Length == 0)
                 {
-                    jsonCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Parameters);
+                    jsonCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Parameters);
                 }
                 else
                 {
-                    jsonCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters);
+                    jsonCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters);
                 }
                 string json = string.Format("[{0}]", string.Join(",", jsonCollection));
 

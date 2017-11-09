@@ -29,8 +29,7 @@ namespace XData.Net.Http
 
             var response = HttpClient.GetAsync(relativeUri).Result;
             string text = response.Content.ReadAsStringAsync().Result;
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public async Task<XElement> GetAsync(string relativeUri)
@@ -40,8 +39,7 @@ namespace XData.Net.Http
 
             var response = await HttpClient.GetAsync(relativeUri);
             string text = await response.Content.ReadAsStringAsync();
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public XElement Put(string relativeUri, XElement value)
@@ -52,8 +50,7 @@ namespace XData.Net.Http
             HttpContent content = new StringContent(value.ToString(), Encoding.UTF8, "application/xml");
             var response = HttpClient.PutAsync(relativeUri, content).Result;
             string text = response.Content.ReadAsStringAsync().Result;
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public async Task<XElement> PutAsync(string relativeUri, XElement value)
@@ -64,8 +61,7 @@ namespace XData.Net.Http
             HttpContent content = new StringContent(value.ToString(), Encoding.UTF8, "application/xml");
             var response = await HttpClient.PutAsync(relativeUri, content);
             string text = await response.Content.ReadAsStringAsync();
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public XElement Post(string relativeUri, XElement value)
@@ -76,8 +72,7 @@ namespace XData.Net.Http
             HttpContent content = new StringContent(value.ToString(), Encoding.UTF8, "application/xml");
             var response = HttpClient.PostAsync(relativeUri, content).Result;
             string text = response.Content.ReadAsStringAsync().Result;
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public async Task<XElement> PostAsync(string relativeUri, XElement value)
@@ -88,8 +83,7 @@ namespace XData.Net.Http
             HttpContent content = new StringContent(value.ToString(), Encoding.UTF8, "application/xml");
             var response = await HttpClient.PostAsync(relativeUri, content);
             string text = await response.Content.ReadAsStringAsync();
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public XElement Delete(string relativeUri)
@@ -99,8 +93,7 @@ namespace XData.Net.Http
 
             var response = HttpClient.DeleteAsync(relativeUri).Result;
             string text = response.Content.ReadAsStringAsync().Result;
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public async Task<XElement> DeleteAsync(string relativeUri)
@@ -110,8 +103,7 @@ namespace XData.Net.Http
 
             var response = await HttpClient.DeleteAsync(relativeUri);
             string text = await response.Content.ReadAsStringAsync();
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public XElement Delete(string relativeUri, XElement value)
@@ -128,8 +120,7 @@ namespace XData.Net.Http
 
             var response = HttpClient.SendAsync(request).Result;
             string text = response.Content.ReadAsStringAsync().Result;
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
+            return XElement.Parse(text);
         }
 
         public async Task<XElement> DeleteAsync(string relativeUri, XElement value)
@@ -146,25 +137,7 @@ namespace XData.Net.Http
 
             var response = await HttpClient.SendAsync(request);
             string text = await response.Content.ReadAsStringAsync();
-            XElement result = XElement.Parse(text);
-            return ReturnResult(response, result);
-        }
-
-        protected static XElement ReturnResult(HttpResponseMessage response, XElement result)
-        {
-            if (response.IsSuccessStatusCode)
-            {
-                if (result.Name.LocalName == "Error")
-                {
-                    result.SetAttributeValue("HttpStatusCode", response.StatusCode);
-                }
-            }
-            else
-            {
-                result.SetAttributeValue("HttpStatusCode", response.StatusCode);
-            }
-
-            return result;
+            return XElement.Parse(text);
         }
 
 

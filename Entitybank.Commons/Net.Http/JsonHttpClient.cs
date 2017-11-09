@@ -27,8 +27,7 @@ namespace XData.Net.Http
             HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             var response = HttpClient.GetAsync(relativeUri).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
-            return ReturnResult(response, result);
+            return response.Content.ReadAsStringAsync().Result;
         }
 
         public async Task<string> GetAsync(string relativeUri)
@@ -37,8 +36,7 @@ namespace XData.Net.Http
             HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             var response = await HttpClient.GetAsync(relativeUri);
-            string result = await response.Content.ReadAsStringAsync();
-            return ReturnResult(response, result);
+            return await response.Content.ReadAsStringAsync();
         }
 
         public string Put(string relativeUri, string value)
@@ -48,8 +46,7 @@ namespace XData.Net.Http
 
             HttpContent content = new StringContent(value.ToString(), Encoding.UTF8, "application/json");
             var response = HttpClient.PutAsync(relativeUri, content).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
-            return ReturnResult(response, result);
+            return response.Content.ReadAsStringAsync().Result;
         }
 
         public async Task<string> PutAsync(string relativeUri, string value)
@@ -59,8 +56,7 @@ namespace XData.Net.Http
 
             HttpContent content = new StringContent(value, Encoding.UTF8, "application/json");
             var response = await HttpClient.PutAsync(relativeUri, content);
-            string result = await response.Content.ReadAsStringAsync();
-            return ReturnResult(response, result);
+            return await response.Content.ReadAsStringAsync();
         }
 
         public string Post(string relativeUri, string value)
@@ -70,8 +66,7 @@ namespace XData.Net.Http
 
             HttpContent content = new StringContent(value, Encoding.UTF8, "application/json");
             var response = HttpClient.PostAsync(relativeUri, content).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
-            return ReturnResult(response, result);
+            return response.Content.ReadAsStringAsync().Result;
         }
 
         public async Task<string> PostAsync(string relativeUri, string value)
@@ -81,8 +76,7 @@ namespace XData.Net.Http
 
             HttpContent content = new StringContent(value, Encoding.UTF8, "application/json");
             var response = await HttpClient.PostAsync(relativeUri, content);
-            string result = await response.Content.ReadAsStringAsync();
-            return ReturnResult(response, result);
+            return await response.Content.ReadAsStringAsync();
         }
 
         public string Delete(string relativeUri)
@@ -91,8 +85,7 @@ namespace XData.Net.Http
             HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             var response = HttpClient.DeleteAsync(relativeUri).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
-            return ReturnResult(response, result);
+            return response.Content.ReadAsStringAsync().Result;
         }
 
         public async Task<string> DeleteAsync(string relativeUri)
@@ -101,8 +94,7 @@ namespace XData.Net.Http
             HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
             var response = await HttpClient.DeleteAsync(relativeUri);
-            string result = await response.Content.ReadAsStringAsync();
-            return ReturnResult(response, result);
+            return await response.Content.ReadAsStringAsync();
         }
 
         public string Delete(string relativeUri, string value)
@@ -118,8 +110,7 @@ namespace XData.Net.Http
             };
 
             var response = HttpClient.SendAsync(request).Result;
-            string result = response.Content.ReadAsStringAsync().Result;
-            return ReturnResult(response, result);
+            return response.Content.ReadAsStringAsync().Result;
         }
 
         public async Task<string> DeleteAsync(string relativeUri, string value)
@@ -135,13 +126,7 @@ namespace XData.Net.Http
             };
 
             var response = await HttpClient.SendAsync(request);
-            string result = await response.Content.ReadAsStringAsync();
-            return ReturnResult(response, result);
-        }
-
-        protected static string ReturnResult(HttpResponseMessage response, string result)
-        {
-            return result;
+            return await response.Content.ReadAsStringAsync();
         }
 
 

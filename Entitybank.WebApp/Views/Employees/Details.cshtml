@@ -3,7 +3,7 @@
     ViewBag.Title = "Employee";
 }
 
-<h2>Details</h2>
+<h2>Employee</h2>
 
 <hr />
 
@@ -22,20 +22,20 @@
         <table id="table" class="table">
             <thead>
                 <tr>
-                    <th>User name</th>
+                    <th>Username</th>
                     <th>Status</th>
                     <th>Last login</th>
                     <th>Last pwd changed</th>
-                    <th>Last lockout</th>
+                    <th>Last lockedout</th>
                 </tr>
             </thead>
             <tbody data-plugin="renderer" class="invisible">
                 <tr>
                     <td>{{UserName}}</td>
                     <td>{{IsDisabled=='true'?'<span class="text-danger">Disabled</span>':'Enabled'}}&nbsp;&nbsp;{{IsLockedOut=='true'?'<span class="text-danger">Locked</span>':'Unlocked'}}</td>
-                    <td>{{LastLoginDate}}</td>
-                    <td>{{LastPasswordChangedDate}}</td>
-                    <td>{{LastLockoutDate}}</td>
+                    <td>{{var m = moment(LastLoginDate); m.isValid() ? m.format('YYYY-MM-DD HH:mm:ss'):''}}</td>
+                    <td>{{var m = moment(LastPasswordChangedDate); m.isValid() ? m.format('YYYY-MM-DD HH:mm:ss'):''}}</td>
+                    <td>{{var m = moment(LastLockoutDate); m.isValid() ? m.format('YYYY-MM-DD HH:mm:ss'):''}}</td>
                 </tr>
             </tbody>
         </table>

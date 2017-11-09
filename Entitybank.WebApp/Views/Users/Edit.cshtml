@@ -1,0 +1,167 @@
+﻿
+@{
+    ViewBag.Title = "User";
+}
+
+<h2>User</h2>
+<hr />
+
+<div id="details" data-plugin="renderer" class="invisible">
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">User name:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{UserName}}</p>
+        </div>
+        <div class="col-sm-2">
+            <label class="pull-right">Name:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{Name}}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">Gender:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{GenderName}}</p>
+        </div>
+        <div class="col-sm-2">
+            <label class="pull-right">Status:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{IsDisabled=='true'?'<span class="text-danger">Disabled</span>':'Enabled'}}&nbsp;&nbsp;{{IsLockedOut=='true'?'<span class="text-danger">Locked</span>':'Unlocked'}}</p>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col-sm-6">
+        <h3>Reset password</h3>
+        <hr />
+        <form id="pwd-form" role="form" action="/Admin/Api/Users" style="width:50%"
+              data-bv-message="This value is not valid"
+              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+              data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+            <div class="form-group">
+                <label for="name">New password</label>
+                <input name="Password" class="form-control" type="password"
+                       required data-bv-notempty-message="The password is required" />
+            </div>
+            <button type="submit" class="btn btn-primary">Reset password</button>
+            <input type="button" class="btn btn-info" value="Return" />
+        </form>
+        <br />
+        <h3>Reset username</h3>
+        <hr />
+        <form id="username-form" role="form" action="/Admin/Api/Users" style="width:50%"
+              data-bv-message="This value is not valid"
+              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+              data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+            <div class="form-group">
+                <label for="name">New username</label>
+                <input name="Username" class="form-control" type="text"
+                       required data-bv-notempty-message="The username is required" />
+            </div>
+            <button type="submit" class="btn btn-primary">Reset username</button>
+            <input type="button" class="btn btn-info" value="Return" data-redirect-url="/Admin/Users/Index" />
+        </form>
+    </div>
+    <div class="col-sm-6">
+        <h3>Grant roles</h3>
+        <hr />
+        <form id="roles-form" role="form" action="/Admin/Api/Users">
+            <div class="form-group">
+                <ul id="roles" class="list-group">
+                    <li style="list-style:none">
+                        <div class="checkbox">
+                            <label>
+                                <input name="RoleId" type="checkbox" value="{{Id}}" />
+                                {{RoleName}}&nbsp;&nbsp;{{DisplayName}}
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Grant roles" />
+            <input class="btn btn-info" type="button" value="Return" data-redirect-url="/Admin/Users/Index" />
+        </form>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/bootstrapValidator.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.getJSON('/json', {}, function (data, textStatus, jqXHR) {
+                $('#details').renderer(data);
+            });
+
+            $.getJSON('/json?name=allRoles', {}, function (data, textStatus, jqXHR) {
+                $('#roles').renderer(data);
+            }).done(function () {
+                $.getJSON('/json?name=roles', {}, function (data, textStatus, jqXHR) {
+                    $('#roles-form').deserializeObject(data);
+                });
+            });
+
+            $('#pwd-form').bootstrapValidator()
+                .on('success.form.bv', function (event) {
+                    event.preventDefault();
+                    var $form = $(event.target);
+                    var bv = $form.data('bootstrapValidator');
+                    var obj = $form.serializeObject();
+                    var action = $form.attr('action');
+                    $.put(action, obj)
+                        .done(function (data, textStatus, jqXHR) {
+                            alert('Password reseted successfully.');
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                        });
+
+                });
+
+            $('#username-form').bootstrapValidator()
+                .on('success.form.bv', function (event) {
+                    event.preventDefault();
+                    var $form = $(event.target);
+                    var bv = $form.data('bootstrapValidator');
+                    var obj = $form.serializeObject();
+                    var action = $form.attr('action');
+                    $.put(action, obj)
+                        .done(function (data, textStatus, jqXHR) {
+                            alert('Username reseted successfully.');
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                        });
+
+                });
+
+            $('#roles-form :submit').click(function (event) {
+                event.preventDefault();
+                var $form = $("#roles-form");
+                var obj = $form.serializeArray();
+                var action = $form.attr('action');
+                $.put(action, obj)
+                    .done(function (data, textStatus, jqXHR) {
+                        alert('Roles reseted successfully.');
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                    });
+            });
+        });
+    </script>
+}

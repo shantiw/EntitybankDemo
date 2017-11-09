@@ -15,7 +15,7 @@ namespace XData.Data.Services
     {
         public XmlDatabase Database { get; private set; }
 
-        protected readonly XmlModifier Modifier;
+        public XmlModifier Modifier { get; private set; }
 
         public XmlService(IEnumerable<KeyValuePair<string, string>> keyValues)
             : this(ConfigurationManager.ConnectionStrings[0].Name, keyValues)
@@ -59,17 +59,17 @@ namespace XData.Data.Services
                 XElement xsd;
                 if (ds.Expands == null || ds.Expands.Length == 0)
                 {
-                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, GetParameterValues(ds.Parameters), ds.Parameters, out xsd);
+                    xCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Parameters, out xsd);
                 }
                 else
                 {
-                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, GetParameterValues(ds.Parameters), ds.Parameters, out xsd);
+                    xCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters, out xsd);
                 }
                 string collection = GetCollection(Schema, ds.Entity);
                 XElement element = new XElement(collection, xCollection);
                 element.SetAttributeValue(XNamespace.Xmlns + "i", XSI);
 
-                int count = oDataQuerier.Count(ds.Entity, ds.Filter, GetParameterValues(ds.Parameters), ds.Parameters);
+                int count = oDataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
 
                 return Pack(element, count, xsd);
             }
@@ -81,11 +81,11 @@ namespace XData.Data.Services
                 XElement xsd;
                 if (ds.Expands == null || ds.Expands.Length == 0)
                 {
-                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, GetParameterValues(ds.Parameters), ds.Parameters, out xsd);
+                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Parameters, out xsd);
                 }
                 else
                 {
-                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Expands, GetParameterValues(ds.Parameters), ds.Parameters, out xsd);
+                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Expands, ds.Parameters, out xsd);
                 }
                 string collection = GetCollection(Schema, ds.Entity);
                 XElement element = new XElement(collection, xCollection);
@@ -103,21 +103,11 @@ namespace XData.Data.Services
             else if (dataSource.GetType() == typeof(CountDataSource))
             {
                 CountDataSource ds = dataSource as CountDataSource;
-                int count = oDataQuerier.Count(ds.Entity, ds.Filter, GetParameterValues(ds.Parameters), ds.Parameters);
+                int count = oDataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
                 return new XElement("Count", count);
             }
 
             throw new NotSupportedException(dataSource.GetType().ToString());
-        }
-
-        protected static IEnumerable<KeyValuePair<string, string>> GetParameterValues(IReadOnlyDictionary<string, object> parameters)
-        {
-            List<KeyValuePair<string, string>> parameterValues = new List<KeyValuePair<string, string>>();
-            foreach (KeyValuePair<string, object> pair in parameters)
-            {
-                parameterValues.Add(new KeyValuePair<string, string>(pair.Key, null));
-            }
-            return parameterValues;
         }
 
         protected static string GetCollection(XElement schema, string entity)

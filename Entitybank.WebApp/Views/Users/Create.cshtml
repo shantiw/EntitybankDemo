@@ -1,0 +1,116 @@
+﻿
+@{
+    ViewBag.Title = "User";
+}
+
+<h2>User</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-6">
+        <form id="form" role="form" style="width:50%"
+              data-bv-message="This value is not valid"
+              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+              data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+            <div class="form-group">
+                <label class="control-label">Employee:</label>
+                <div class="input-group">
+                    <input type="hidden" name="EmployeeId" />
+                    <input id="employee-name" class="form-control" type="text" readonly>
+                    <span class="input-group-addon" onclick="$('#employee-name').click()">
+                        <i class="glyphicon glyphicon-option-horizontal"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Username:</label>
+                <input class="form-control" type="text"
+                       data_bv_notempty="true"
+                       data_bv_notempty_message="The user name is required and cannot be empty"
+                       data_bv_stringlength="true"
+                       data_bv_stringlength_min="4"
+                       data_bv_stringlength_max="8"
+                       data_bv_stringlength_message="The user name must be at least 4 and not more than 8 characters long"
+                       data_bv_username="true"
+                       data_bv_username_message="The user name must contain at least one of alphabetical characters and not contain ''"
+                       pattern="^\w+$"
+                       data_bv_regexp_message="The user name can only consist of alphabetical characters, numbers and underscore"
+                       data_bv_remote="true"
+                       data_bv_remote_url="/Admin/Users/IsUniqueUserName"
+                       data_bv_remote_message="The user name is already taken" />
+
+            </div>
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input name="IsDisabled" type="checkbox" />Disabled
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Create" />
+                <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
+            </div>
+        </form>
+    </div>
+    <div class="col-sm-6">
+        <form id="form" role="form">
+            <div class="form-group">
+                <label class="control-label">Grant roles:</label>
+                <ul id="roles" class="list-group">
+                    <li style="list-style:none">
+                        <div class="checkbox">
+                            <label>
+                                <input name="RoleId" type="checkbox" value="{{Id}}" />
+                                {{RoleName}}&nbsp;&nbsp;{{DisplayName}}
+                            </label>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </form>
+    </div>
+</div>
+
+@Html.Partial("_EmplyeeDialog")
+
+@section styles
+{
+    <link href="~/frontend/xfront/css/xfront.css" rel="stylesheet" />
+}
+
+@section scripts
+{
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('select[data-name]').initializer();
+
+            $.getJSON('/json?name=allRoles', {}, function (data, textStatus, jqXHR) {
+                $('#roles').renderer(data);
+            });
+
+            $('#employee-name').click(function (event) {
+                var $element = $('#employee-name');
+                $('#employee-dialog').selectDialog({
+                    url: "/json?name=employee-dialog",
+                    done: function (result) {
+                        $element.siblings().filter(':hidden').val(result["Id"]);
+                        $element.val(result["Name"]);
+                    }
+                });
+            });
+
+            $('#employee-name').siblings().filter('.input-group-addon').click(function (event) {
+                $('#employee-name').click();
+            });
+
+        });
+    </script>
+}

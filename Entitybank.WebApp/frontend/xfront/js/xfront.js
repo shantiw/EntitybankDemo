@@ -5,6 +5,135 @@ if (typeof jQuery === 'undefined') {
     throw new Error('xfront\'s JavaScript requires jQuery');
 }
 
+// selectDialog options: {url,done(result)}
++function ($) {
+    "use strict";
+
+    // Class
+    var SelectDialog = function (element, options) {
+        this.$element = $(element);
+        this.$querier = this.$element.find('.modal-body');
+        this.options = $.extend({}, SelectDialog.DEFAULTS, options);
+
+        var $this = this;
+        var done = this.options.done;
+        var submit = this.$element.find('.modal-footer :button[data-dismiss!=modal]');
+        submit.click(function (event) {
+            event.preventDefault();
+            $(element).modal('hide');
+            if (done != null) {
+                done($this.selectedObject);
+            }
+        });
+    };
+
+    SelectDialog.VERSION = '1.0.0';
+
+    SelectDialog.DEFAULTS = {
+        "url": "/json",
+        selectedClass: "info"
+    };
+
+    SelectDialog.prototype.query = function (pageIndex) {
+        var $this = this;
+        var $element = this.$element;
+        var $querier = this.$querier;
+        var $url = this.options.url;
+
+        var obj = $querier.serializeObject();
+        obj.pageIndex = pageIndex;
+
+        $.getJSON($url, obj, function (data, textStatus, jqXHR) {
+
+            var pageIndexChange = function (pageIndex) {
+                $this.query(pageIndex);
+            };
+
+            var items = data["value"];
+            var container = $querier.find('[data-plugin=renderer]');
+            container.renderer(items);
+            container.children().each(function (index, element) {
+                $(element).attr('data-data', JSON.stringify(items[index]));
+            });
+
+            var selectedClass = $this.options.selectedClass;
+            container.children().click(function (event) {
+                event.preventDefault();
+                container.children().removeClass(selectedClass);
+                $(this).addClass(selectedClass);
+                $this.selectedObject = JSON.parse($(this).attr('data-data'));
+            });
+
+            var itemCount = data["@count"];
+            var pageSize = obj.pageSize;
+            var pageCount = Math.ceil(itemCount / pageSize);
+
+            $querier.find('[data-plugin=pagination]').pagination({
+                "pageIndex": pageIndex,
+                "pageCount": pageCount,
+                "change": function (index) {
+                    pageIndexChange(index);
+                }
+            });
+            $querier.find('[data-plugin=paginationGo]').paginationGo({
+                "pageIndex": pageIndex,
+                "pageCount": pageCount,
+                "change": function (index) {
+                    pageIndexChange(index);
+                }
+            });
+            $querier.find('[data-plugin=paginationInfo]').paginationInfo({
+                "pageSize": pageSize,
+                "pageIndex": pageIndex,
+                "itemCount": itemCount
+            });
+
+            // filterer
+            $querier.find('[data-plugin=filterer]').each(function (index, element) {
+                var filterer = $(element);
+                if (filterer.is(':button')) {
+                    var data_name = filterer.attr('data-name');
+                    filterer.click(function (event) {
+                        event.preventDefault();
+                        $this.query(0);
+                    });
+                }
+            });
+
+            // tableHeadSorter
+            $querier.find('[data-plugin=tableHeadSorter]').tableHeadSorter({
+                "change": function (value) {
+                    $this.query(0);
+                }
+            });
+        });
+    };
+
+    // Plugin
+    function Plugin(options) {
+        return this.each(function () {
+            var $this = $(this);
+            var data = $this.data('xd.selectDialog');
+            var opts = typeof options == 'object' && options;
+            if (!data) $this.data('xd.selectDialog', (data = new SelectDialog(this, opts)));
+            data.query(0);
+            data.$element.modal();
+        })
+    }
+
+    var old = $.fn.selectDialog;
+
+    $.fn.selectDialog = Plugin;
+    $.fn.selectDialog.Constructor = SelectDialog;
+
+    // No conflict
+    $.fn.selectDialog.noConflict = function () {
+        $.fn.selectDialog = old;
+        return this;
+    };
+
+}(jQuery);
+
 // pagingQuerier options: {url,done(data, page)}
 +function ($) {
     "use strict";
@@ -33,10 +162,7 @@ if (typeof jQuery === 'undefined') {
         var obj = $querier.serializeObject();
         obj.pageIndex = searchObj.pageIndex;
 
-        var r_page = {};
         $.getJSON($url, obj, function (data, textStatus, jqXHR) {
-
-            $querier.find('[data-plugin=renderer]').renderer(data["value"]);
 
             var pageIndexChange = function (pageIndex) {
                 if (pageIndex == 0) {
@@ -54,9 +180,11 @@ if (typeof jQuery === 'undefined') {
                 window.location.href = $.toEncodedUrl(searchObj);
             };
 
+            $querier.find('[data-plugin=renderer]').renderer(data["value"]);
+
             var itemCount = data["@count"];
 
-            var pageIndex = searchObj.pageIndex;
+            var pageIndex = obj.pageIndex;
 
             var pageSize;
             var pageSizer = $querier.find('[data-plugin=pageSizer]');
@@ -72,6 +200,7 @@ if (typeof jQuery === 'undefined') {
 
             var pageCount = Math.ceil(itemCount / pageSize);
 
+            var r_page = {};
             r_page.itemCount = itemCount;
             r_page.pageIndex = pageIndex;
             r_page.pageSize = pageSize;
@@ -96,7 +225,6 @@ if (typeof jQuery === 'undefined') {
                 "pageIndex": pageIndex,
                 "itemCount": itemCount
             });
-        }).done(function (data, textStatus, jqXHR) {
 
             // filterer
             $querier.find('[data-plugin=filterer]').each(function (index, element) {
@@ -167,7 +295,7 @@ if (typeof jQuery === 'undefined') {
         })
     }
 
-    var old = $.fn.queryPage;
+    var old = $.fn.pagingQuerier;
 
     $.fn.pagingQuerier = Plugin;
     $.fn.pagingQuerier.Constructor = PagingQuerier;
@@ -501,25 +629,19 @@ if (typeof jQuery === 'undefined') {
             var var_statements = '';
             for (var name in data) {
                 var value = data[name];
-                if (value == null) value = '';
-
-                if (isNaN(value)) {
-                    var m = moment(value);
-                    if (m.isValid()) {
-                        value = m.format('YYYY-MM-DD');
-                        if (!moment(value).isSame(m)) {
-                            value = m.format('YYYY-MM-DD HH:mm:ss')
-                        }
+                if (typeof value == 'string') {
+                    if (value.indexOf('/Date(') == 0 && value.lastIndexOf(')/') == value.length - 2) {
+                        data[name] = new Date(value.slice(6, -7) - 0);
                     }
                 }
-
-                var_statements += ' var ' + name + '="' + value + '";';
+                var_statements += ' var ' + name + ' = data["' + name + '"];';
             }
 
             var result = template.replace(/\{{2}.*?\}{2}/g, function (word) {
                 var exp = word.slice(2, -2);
                 exp = var_statements + ' ' + exp;
-                return eval(exp);
+                var result = eval(exp);
+                return (result == null) ? '' : result;
             });
             return result;
         }

@@ -34,7 +34,7 @@
 
     <input name="header" id="header" type="hidden" value="0" />
     <input name="updown" id="updown" type="hidden" value="1" />
-    <table style="margin-top:2px" class="table table-bordered table-condensed">
+    <table style="margin-top:2px" class="table table-bordered table-condensed table-striped">
         <thead data-plugin="tableHeadSorter" data-header-element="header" data-updown-element="updown">
             <tr>
                 <th class="sort-both" data-header="1">Name</th>
@@ -54,7 +54,7 @@
             <tr>
                 <td>{{Name}}</td>
                 <td>{{GenderName}}</td>
-                <td>{{Birthdate}}</td>
+                <td>{{var m = moment(Birthdate); m.isValid() ? m.format('YYYY-MM-DD'):''}}</td>
                 <td>{{Tel}}</td>
                 <td>{{Mobile}}</td>
                 <td>{{Email}}</td>

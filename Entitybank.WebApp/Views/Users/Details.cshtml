@@ -1,9 +1,9 @@
 ﻿
 @{
-    ViewBag.Title = "Role";
+    ViewBag.Title = "User";
 }
 
-<h2>Role</h2>
+<h2>User</h2>
 
 <hr />
 
@@ -13,7 +13,7 @@
 
 <div class="row">
     <div class="col-sm-2">
-        <label class="pull-right">Users:</label>
+        <label class="pull-right">Roles:</label>
     </div>
 </div>
 
@@ -22,20 +22,16 @@
         <table id="table" class="table">
             <thead>
                 <tr>
-                    <th>User name</th>
-                    <th>Name</th>
-                    <th>Gender</th>
-                    <th>Email</th>
-                    <th>Mobile</th>
+                    <th>Role Name</th>
+                    <th>Display Name</th>
+                    <th>Description</th>
                 </tr>
             </thead>
             <tbody data-plugin="renderer" class="invisible">
                 <tr>
-                    <td>{{UserName}}</td>
-                    <td>{{Name}}</td>
-                    <td>{{GenderName}}</td>
-                    <td>{{Email}}</td>
-                    <td>{{Mobile}}</td>
+                    <td>{{RoleName}}</td>
+                    <td>{{DisplayName}}</td>
+                    <td>{{Descr}}</td>
                 </tr>
             </tbody>
         </table>
@@ -53,7 +49,7 @@
                 $('#details').renderer(data);
             });
 
-            $.getJSON('/json?name=users', {}, function (data, textStatus, jqXHR) {
+            $.getJSON('/json?name=roles', {}, function (data, textStatus, jqXHR) {
                 $('#table tbody').renderer(data);
             });
         });

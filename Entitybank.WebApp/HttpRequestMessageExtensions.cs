@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Web;
 
 namespace System.Net.Http
 {
@@ -37,9 +36,9 @@ namespace System.Net.Http
         public static IEnumerable<KeyValuePair<string, string>> GetNameValues(this HttpRequestMessage request)
         {
             IEnumerable<KeyValuePair<string, string>> nameValues = request.GetQueryNameValuePairs();
-            if (HttpContext.Current.Request.UrlReferrer == null) return nameValues;
+            if (request.Headers.Referrer == null) return nameValues;
 
-            string referrer = HttpContext.Current.Request.UrlReferrer.AbsolutePath;
+            string referrer = request.Headers.Referrer.AbsolutePath;
             if (string.IsNullOrWhiteSpace(referrer)) return nameValues;
 
             if (nameValues.Any(p => p.Key == "key")) return nameValues;

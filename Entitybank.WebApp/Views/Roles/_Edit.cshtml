@@ -5,6 +5,10 @@
       data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
     <input name="Id" type="hidden" />
     <div class="form-group">
+        <div data-plugin="errorRenderer" class="col-sm-offset-2 text-danger">
+        </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-2 control-label">Role Name:</label>
         <div class="col-sm-4">
             <input name="RoleName" class="form-control" type="text"
@@ -12,6 +16,8 @@
                    pattern="^\w+$" data-bv-regexp-message="The role name can only consist of alphabetical characters, numbers and underscore"
                    data-bv-remote data-bv-remote-url="/Admin/Roles/IsUnique" data-bv-remote-message="The role name is already taken" />
         </div>
+    </div>
+    <div class="form-group">
         <label class="col-sm-2 control-label">Display Name:</label>
         <div class="col-sm-4">
             <input name="DisplayName" class="form-control" type="text" />
@@ -21,10 +27,6 @@
         <label class="col-sm-2 control-label">Descr:</label>
         <div class="col-sm-4">
             <textarea name="Descr" class="form-control" rows="4"></textarea>
-        </div>
-    </div>
-    <div class="form-group">
-        <div data-plugin="errorRenderer" class="col-sm-offset-2 text-danger">
         </div>
     </div>
     <div class="form-group">

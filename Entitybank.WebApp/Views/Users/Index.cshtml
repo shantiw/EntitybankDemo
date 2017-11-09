@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = "Users";
+}
+
+<br />
+
+<form class="form-inline" style="margin-left:8px">
+    <div class="form-group" style="margin-right:20px">
+        <label class="control-label">Username / Name&nbsp;</label>
+        <input name="Name" class="form-control" />
+    </div>
+    <div class="form-group" style="margin-right:20px">
+        <label class="control-label">Gender&nbsp;</label>
+        <select data-name="genders" data-empty-html="&nbsp;All" name="Gender" class="form-control">
+            <option value="{{Id}}">&nbsp;{{Name}}&nbsp;&nbsp;</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Tel / Mobile / Email&nbsp;</label>
+        <input name="Contact" class="form-control" />
+    </div>
+    <div class="form-group">
+        <button type="button" class="btn btn-info"
+                data-plugin="filterer"
+                data-value-elements="Name,Gender,Contact">
+            <i class="glyphicon glyphicon-search"></i>&nbsp;Query
+        </button>
+    </div>
+</form>
+
+<br />
+
+<input name="header" id="header" type="hidden" value="0" />
+<input name="updown" id="updown" type="hidden" value="1" />
+<table class="table table-bordered table-condensed table-striped">
+    <thead data-plugin="tableHeadSorter" data-header-element="header" data-updown-element="updown">
+        <tr>
+            <th class="sort-both" data-header="1">Username</th>
+            <th class="sort-both" data-header="2">Name</th>
+            <th class="sort-both" data-header="3">Gender</th>
+            <th class="sort-both" data-header="4">Tel</th>
+            <th class="sort-both" data-header="5">Mobile</th>
+            <th class="sort-both" data-header="6">Email</th>
+            <th>Roles</th>
+            <th colspan="5">
+                <a href="/Admin/Users/Create" class="btn">
+                    <i class="glyphicon glyphicon-new-window"></i>&nbsp;Create
+                </a>
+            </th>
+        </tr>
+    </thead>
+    <tbody data-plugin="renderer" class="invisible">
+        <tr>
+            <td>{{UserName}}</td>
+            <td>{{Name}}</td>
+            <td>{{GenderName}}</td>
+            <td>{{Tel}}</td>
+            <td>{{Mobile}}</td>
+            <td>{{Email}}</td>
+            <td>{{stringfyRoles(Roles)}}</td>
+            <td style="border-right-width:0px">
+                <a href="javascript:void(0);" style="padding-right:0px" class="btn" onclick="enable('{{Id}}','{{IsDisabled}}');">
+                    {{IsDisabled ? 'Enable' : 'Disable'}}
+                </a>
+            </td>
+            <td style="border-left-width:0px;border-right-width:0px">
+                <a href="javascript:void(0);" style="padding-left:0px;padding-right:0px" class="{{IsLockedOut ? 'btn' : 'btn disabled'}}" onc onclick="unlock('{{Id}}','{{UserName}}');">
+                    Unlock
+                </a>
+            </td>
+            <td style="border-left-width:0px;border-right-width:0px">
+                <a href="/Admin/Users/Edit/{{Id}}{{window.location.search}}" style="padding-left:0px;padding-right:0px" class="btn">
+                    <i class="glyphicon glyphicon-edit"></i>&nbsp;Edit
+                </a>
+            </td>
+            <td style="border-left-width:0px;border-right-width:0px">
+                <a href="/Admin/Users/Delete/{{Id}}{{window.location.search}}" style="padding-left:0px;padding-right:0px" class="btn">
+                    <i class="glyphicon glyphicon-remove"></i>&nbsp;Delete
+                </a>
+            </td>
+            <td style="border-left-width:0px">
+                <a href="/Admin/Users/Details/{{Id}}" style="padding-left:0px;padding-right:0px" class="btn">
+                    <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Details
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<hr style="margin-top: 0px; padding-top: 0px; border-top: 2px solid #dddddd" />
+
+<span data-plugin="paginationInfo" style="margin-right: 32px; margin-top: 8px; float: left" data-html="{{itemCount}} results"></span>
+
+<ul data-plugin="pagination" style="display: inline" class="pagination"></ul>
+
+<label style="margin-left: 16px">To</label>
+<input id="paginationGoValue" class="form-control input-sm" type="number" min="1" max="50" style="padding: 0px; padding-left: 4px; height: 28px; width: 42px; display: inline" />
+<button data-plugin="paginationGo" style="margin-bottom: 0px" class="btn btn-info btn-sm" type="button"
+        data-value-element="paginationGoValue">
+    Go
+</button>
+
+<div class="pull-right">
+    <label>Size</label>
+    <select data-plugin="pageSizer" name="pageSize" class="form-control input-sm" style="padding-left: 10px; padding-right: 2px; width: 60px; display: inline-block">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+    </select>
+</div>
+
+@section styles
+{
+    <link href="~/frontend/xfront/css/xfront.css" rel="stylesheet" />
+}
+
+@section scripts
+{
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        var stringfyRoles = function (data) {
+            var result = '';
+            $.each(data, function (index, value) {
+                result += value["RoleName"] + ","
+            });
+            return (result.length == 0) ? result : result.slice(0, -1);
+        }
+
+        var enable = function (id, isDisabled) {
+            if (isDisabled) {
+
+            }
+            else {
+
+            }
+
+            location.reload(true);
+        };
+
+        var unlock = function (id, username) {
+            if (window.confirm("Unlock " + username + "?")) {
+                alert(id);
+                location.reload(true);
+            }
+        };
+
+        $(document).ready(function () {
+            $('select[data-name]').initializer();
+
+            $('body').pagingQuerier();
+        });
+    </script>
+}

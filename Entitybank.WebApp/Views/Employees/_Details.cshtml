@@ -18,7 +18,7 @@
             <label class="pull-right">Birthdate:</label>
         </div>
         <div class="col-sm-4">
-            <p>{{Birthdate}}</p>
+            <p>{{var m = moment(Birthdate); m.isValid() ? m.format('YYYY-MM-DD'):''}}</p>
         </div>
         <div class="col-sm-2">
             <label class="pull-right">Email:</label>
