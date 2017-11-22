@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Account";
+}
+
+<br />
+<h3>Change password</h3>
+<hr />
+
+<form id="form" role="form" style="width:25%" action="/Api/Account/Password"
+      data-bv-message="This value is not valid"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+    <div class="form-group">
+        <div data-plugin="errorRenderer" class="text-danger">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="name">Password</label>
+        <input name="Password" class="form-control" type="password"
+               data-bv-notempty="true" data-bv-notempty-message="The password is required and cannot be empty" />
+    </div>
+    <div class="form-group">
+        <label for="name">New password</label>
+        <input name="NewPassword" class="form-control" type="password" maxlength="20"
+               data-bv-notempty="true" data-bv-notempty-message="The new password is required and cannot be empty"
+               data-bv-stringlength="true" data-bv-stringlength-min="6" data-bv-stringlength-max="20"
+               data-bv-stringlength-message="The new password must be at least 6 and not more than 20 characters long"
+               data-bv-identical="true" data-bv-identical-field="ConfirmPassword"
+               data-bv-identical-message="The new password and its confirm are not the same" />
+    </div>
+    <div class="form-group">
+        <label for="name">Confirm password</label>
+        <input name="ConfirmPassword" class="form-control" type="password" maxlength="20"
+               data-bv-notempty="true" data-bv-notempty-message="The confirm password is required and cannot be empty" ,
+               data-bv-identical="true" data-bv-identical-field="NewPassword"
+               data-bv-identical-message="The new password and its confirm are not the same" />
+    </div>
+    <button type="submit" class="btn btn-primary" data-redirect-url="/Account">Change password</button>
+    <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
+</form>
+
+@section scripts
+{
+    <script src="~/Scripts/bootstrapValidator.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#form').bootstrapValidator()
+                .on('success.form.bv', function (event) {
+                    event.preventDefault();
+                    var $form = $(event.target);
+                    var bv = $form.data('bootstrapValidator');
+                    var obj = $form.serializeObject();
+                    var url = $form.attr('action');
+                    $.put(url, obj)
+                        .done(function (data, textStatus, jqXHR) {
+                            var redirect = bv.$submitButton.attr("data-redirect-url");
+                            window.location.href = redirect;
+                        })
+                        .fail(function (jqXHR, textStatus, errorThrown) {
+                            $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                        });
+                });
+        });
+    </script>
+}

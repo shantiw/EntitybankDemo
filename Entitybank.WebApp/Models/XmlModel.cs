@@ -15,7 +15,8 @@ namespace XData.Web.Models
         {
             const string FORMAT = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
 
-            DateTime now = XmlService.GetNow();
+            XmlService service = new XmlService(request.GetQueryNameValuePairs());
+            DateTime now = service.GetNow();
             XElement element = new XElement("now", now.ToString(FORMAT));
             return CreateHttpResponseMessage(element, request);
         }
@@ -24,7 +25,8 @@ namespace XData.Web.Models
         {
             const string FORMAT = "yyyy-MM-ddTHH:mm:ss.FFFFFFFZ";
 
-            DateTime utcNow = XmlService.GetUtcNow();
+            XmlService service = new XmlService(request.GetQueryNameValuePairs());
+            DateTime utcNow = service.GetUtcNow();
             XElement element = new XElement("utcnow", utcNow.ToString(FORMAT));
             return CreateHttpResponseMessage(element, request);
         }

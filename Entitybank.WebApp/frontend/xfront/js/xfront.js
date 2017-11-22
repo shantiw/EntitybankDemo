@@ -15,14 +15,17 @@ if (typeof jQuery === 'undefined') {
         this.$querier = this.$element.find('.modal-body');
         this.options = $.extend({}, SelectDialog.DEFAULTS, options);
 
-        var $this = this;
-        var done = this.options.done;
+        var instance = this;
         var submit = this.$element.find('.modal-footer :button[data-dismiss!=modal]');
         submit.click(function (event) {
             event.preventDefault();
-            $(element).modal('hide');
+            instance.$element.modal('hide');
+            var done = instance.options.done;
             if (done != null) {
-                done($this.selectedObject);
+                var selectedClass = instance.options.selectedClass;
+                var container = instance.$querier.find('[data-plugin=renderer]');
+                var data = container.children('.' + selectedClass).attr('data-data');
+                done((data == null) ? null : JSON.parse(data));
             }
         });
     };
@@ -30,7 +33,7 @@ if (typeof jQuery === 'undefined') {
     SelectDialog.VERSION = '1.0.0';
 
     SelectDialog.DEFAULTS = {
-        "url": "/json",
+        "url": "/api",
         selectedClass: "info"
     };
 
@@ -61,7 +64,6 @@ if (typeof jQuery === 'undefined') {
                 event.preventDefault();
                 container.children().removeClass(selectedClass);
                 $(this).addClass(selectedClass);
-                $this.selectedObject = JSON.parse($(this).attr('data-data'));
             });
 
             var itemCount = data["@count"];
@@ -116,10 +118,38 @@ if (typeof jQuery === 'undefined') {
             var data = $this.data('xd.selectDialog');
             var opts = typeof options == 'object' && options;
             if (!data) $this.data('xd.selectDialog', (data = new SelectDialog(this, opts)));
-            data.query(0);
+            Reset(data);
             data.$element.modal();
         })
     }
+
+    var Reset = function (instance) {
+        var $element = instance.$element;
+        var inputs = $element.find('[data-plugin=filterer]').attr('data-value-elements').split(',');
+
+        $.each(inputs, function (index, name) {
+            var $input = $element.find('[name=' + $.trim(name) + ']');
+            Clear($input);
+        });
+        instance.query(0);
+    };
+
+    var Clear = function ($input) {
+        if ($input.is('select')) {
+            var val = $input.find('option:first').val();
+            $input.val(val);
+        }
+        if ($input.is('textarea')) {
+            $input.val('');
+        }
+        else if ($input.is('input')) {
+            var type = $input.attr('type');
+            if (type == 'button' || type == 'submit' || type == 'reset') {
+                return;
+            }
+            $input.val('').removeAttr('checked');
+        }
+    };
 
     var old = $.fn.selectDialog;
 
@@ -147,7 +177,7 @@ if (typeof jQuery === 'undefined') {
     PagingQuerier.VERSION = '1.0.0';
 
     PagingQuerier.DEFAULTS = {
-        "url": "/json"
+        "url": "/api"
     };
 
     PagingQuerier.prototype.initialize = function () {
@@ -322,7 +352,7 @@ if (typeof jQuery === 'undefined') {
     Initializer.VERSION = '1.0.0';
 
     Initializer.DEFAULTS = {
-        "url": "/json"
+        "url": "/api"
     };
 
     Initializer.prototype.initialize = function () {

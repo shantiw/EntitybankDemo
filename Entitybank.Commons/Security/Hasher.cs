@@ -10,28 +10,33 @@ namespace XData.Data.Security
 {
     public abstract class Hasher
     {
-        public string Hash(string str)
+        // overload
+        public string Hash(string value)
         {
-            return Hash(str, null);
+            return Hash(value, new byte[0]);
         }
 
-        public abstract string Hash(string str, string salt);
+        // overload
+        public string Hash(string value, string salt)
+        {
+            return Hash(value, Encoding.UTF8.GetBytes(salt));
+        }
 
-        protected string Hash(HashAlgorithm hashAlgorithm, string plain, string salt)
+        public abstract string Hash(string value, byte[] salt);
+
+        protected string Hash(HashAlgorithm hashAlgorithm, string plain, byte[] salt)
         {
             byte[] plainBytes = Encoding.UTF8.GetBytes(plain);
             byte[] buffer;
-            if (string.IsNullOrEmpty(salt))
+            if (salt.Length == 0)
             {
                 buffer = plainBytes;
             }
             else
             {
-                byte[] saltBytes = Encoding.UTF8.GetBytes(salt);
-                buffer = new byte[saltBytes.Length + plainBytes.Length];
-
-                Buffer.BlockCopy(saltBytes, 0, buffer, 0, saltBytes.Length);
-                Buffer.BlockCopy(plainBytes, 0, buffer, saltBytes.Length, plainBytes.Length);
+                buffer = new byte[salt.Length + plainBytes.Length];
+                Buffer.BlockCopy(salt, 0, buffer, 0, salt.Length);
+                Buffer.BlockCopy(plainBytes, 0, buffer, salt.Length, plainBytes.Length);
             }
 
             byte[] result = hashAlgorithm.ComputeHash(buffer);

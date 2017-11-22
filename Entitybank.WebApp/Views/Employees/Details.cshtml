@@ -49,11 +49,11 @@
 
     <script>
         $(document).ready(function () {
-            $.getJSON('/json', {}, function (data, textStatus, jqXHR) {
+            $.getJSON('/api', {}, function (data, textStatus, jqXHR) {
                 $('#details').renderer(data);
             });
 
-            $.getJSON('/json?name=users', {}, function (data, textStatus, jqXHR) {
+            $.getJSON('/api?name=users', {}, function (data, textStatus, jqXHR) {
                 $('#table tbody').renderer(data);
             });
         });

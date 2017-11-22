@@ -9,7 +9,7 @@ using XData.Web.Models;
 
 namespace XData.Web.Http.Controllers
 {
-    [RoutePrefix("json")]
+    [RoutePrefix("Api")]
     public class JsonController : ApiController
     {
         private JsonModel Model = new JsonModel();

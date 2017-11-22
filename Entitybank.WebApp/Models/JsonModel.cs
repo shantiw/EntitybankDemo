@@ -14,7 +14,8 @@ namespace XData.Web.Models
         {
             const string FORMAT = "yyyy-MM-ddTHH:mm:ss.FFFFFFFK";
 
-            DateTime now = JsonService.GetNow();
+            JsonService service = new JsonService(request.GetQueryNameValuePairs());
+            DateTime now = service.GetNow();
             string json = string.Format("{{\"now\": {0}}}", now.ToString(FORMAT));
             return CreateHttpResponseMessage(json, request);
         }
@@ -23,7 +24,8 @@ namespace XData.Web.Models
         {
             const string FORMAT = "yyyy-MM-ddTHH:mm:ss.FFFFFFFZ";
 
-            DateTime utcNow = JsonService.GetUtcNow();
+            JsonService service = new JsonService(request.GetQueryNameValuePairs());
+            DateTime utcNow = service.GetUtcNow();
             string json = string.Format("{{\"utcnow\": {0}}}", utcNow.ToString(FORMAT));
             return CreateHttpResponseMessage(json, request);
         }

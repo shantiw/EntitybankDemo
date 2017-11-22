@@ -55,7 +55,7 @@
     <Compile Include="Security\SymmetricCryptors.cs" />
     <Compile Include="Security\Hasher.cs" />
     <Compile Include="Security\NamedHasher.cs" />
-    <Compile Include="Helpers\Base64Generator.cs" />
+    <Compile Include="Helpers\RandomNumGenerator.cs" />
     <Compile Include="Xml\XmlValidator.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -72,6 +72,12 @@
             <button type="submit" class="btn btn-primary">Reset username</button>
             <input type="button" class="btn btn-info" value="Return" data-redirect-url="/Admin/Users/Index" />
         </form>
+        <br />
+        <h3>Enable/Disable</h3>
+        <hr />
+        <br />
+        <h3>Unlock</h3>
+        <hr />
     </div>
     <div class="col-sm-6">
         <h3>Grant roles</h3>
@@ -103,14 +109,14 @@
 
     <script>
         $(document).ready(function () {
-            $.getJSON('/json', {}, function (data, textStatus, jqXHR) {
+            $.getJSON('/api', {}, function (data, textStatus, jqXHR) {
                 $('#details').renderer(data);
             });
 
-            $.getJSON('/json?name=allRoles', {}, function (data, textStatus, jqXHR) {
+            $.getJSON('/api?name=allRoles', {}, function (data, textStatus, jqXHR) {
                 $('#roles').renderer(data);
             }).done(function () {
-                $.getJSON('/json?name=roles', {}, function (data, textStatus, jqXHR) {
+                $.getJSON('/api?name=roles', {}, function (data, textStatus, jqXHR) {
                     $('#roles-form').deserializeObject(data);
                 });
             });

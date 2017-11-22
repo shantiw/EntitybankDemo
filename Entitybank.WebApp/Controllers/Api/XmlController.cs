@@ -5,11 +5,13 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Xml.Linq;
+using XData.Web.Http.Filters;
 using XData.Web.Models;
 
 namespace XData.Web.Http.Controllers
 {
     [RoutePrefix("xml")]
+    [CompressionActionFilter]
     public class XmlController : ApiController
     {
         private XmlModel Model = new XmlModel();

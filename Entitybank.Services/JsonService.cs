@@ -17,41 +17,36 @@ namespace XData.Data.Services
     public partial class JsonService : DataService
     {
         public DynDatabase Database { get; private set; }
-
         public DynModifier Modifier { get; private set; }
+
+        protected ODataQuerier<string> ODataQuerier;
 
         public JsonService(IEnumerable<KeyValuePair<string, string>> keyValues)
             : this(ConfigurationManager.ConnectionStrings[0].Name, keyValues)
         {
         }
 
-        protected JsonService(string name, IEnumerable<KeyValuePair<string, string>> keyValues)
+        public JsonService(string name, IEnumerable<KeyValuePair<string, string>> keyValues)
             : base(name, keyValues)
         {
             Modifier = DynModifier.Create(name);
             Database = Modifier.Database;
-
-            RegisterEvents();
+            ODataQuerier = ODataQuerier<string>.Create(Name, Schema);
         }
 
-        public static DateTime GetNow()
+        public DateTime GetNow()
         {
-            string name = ConfigurationManager.ConnectionStrings[0].Name;
-            return ODataQuerier.GetNow(name);
+            return ODataQuerier.GetNow();
         }
 
-        public static DateTime GetUtcNow()
+        public DateTime GetUtcNow()
         {
-            string name = ConfigurationManager.ConnectionStrings[0].Name;
-            return ODataQuerier.GetUtcNow(name);
+            return ODataQuerier.GetUtcNow();
         }
 
         public string Get()
         {
-            DataSource dataSource = new DataSourceCreator(Name, KeyValues).Create(); ;
-
-            ODataQuerier<string> oDataQuerier = ODataQuerier<string>.Create(Name, Schema);
-
+            DataSource dataSource = new DataSourceCreator(Name, KeyValues).Create();
             if (dataSource.GetType() == typeof(PagingDataSource))
             {
                 PagingDataSource ds = dataSource as PagingDataSource;
@@ -59,15 +54,15 @@ namespace XData.Data.Services
                 IEnumerable<string> jsonCollection;
                 if (ds.Expands == null || ds.Expands.Length == 0)
                 {
-                    jsonCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Parameters);
+                    jsonCollection = ODataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Parameters);
                 }
                 else
                 {
-                    jsonCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters);
+                    jsonCollection = ODataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters);
                 }
                 string json = string.Format("[{0}]", string.Join(",", jsonCollection));
 
-                int count = oDataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
+                int count = ODataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
                 json = string.Format("{{\"@count\":{0},\"value\":{1}}}", count, json);
                 return json;
             }
@@ -78,23 +73,23 @@ namespace XData.Data.Services
                 IEnumerable<string> jsonCollection;
                 if (ds.Expands == null || ds.Expands.Length == 0)
                 {
-                    jsonCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Parameters);
+                    jsonCollection = ODataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Parameters);
                 }
                 else
                 {
-                    jsonCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Expands, ds.Parameters);
+                    jsonCollection = ODataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Expands, ds.Parameters);
                 }
                 return string.Format("[{0}]", string.Join(",", jsonCollection));
             }
             else if (dataSource.GetType() == typeof(DefaultGetterDataSource))
             {
                 DefaultGetterDataSource ds = dataSource as DefaultGetterDataSource;
-                return oDataQuerier.GetDefault(dataSource.Entity, ds.Select);
+                return ODataQuerier.GetDefault(dataSource.Entity, ds.Select);
             }
             else if (dataSource.GetType() == typeof(CountDataSource))
             {
                 CountDataSource ds = dataSource as CountDataSource;
-                int count = oDataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
+                int count = ODataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
                 return string.Format("{{\"Count\": {0}}}", count);
             }
 

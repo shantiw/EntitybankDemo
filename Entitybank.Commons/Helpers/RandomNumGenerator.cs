@@ -7,21 +7,20 @@ using System.Threading.Tasks;
 
 namespace XData.Data.Helpers
 {
-    public class Base64Generator
+    public class RandomNumGenerator
     {
         public const int DEFAULT_SALT_LENGTH = 16;
 
-        public string Generate()
+        public byte[] Generate()
         {
             return Generate(DEFAULT_SALT_LENGTH);
         }
 
-        public string Generate(int length)
+        public byte[] Generate(int length)
         {
             byte[] buffer = new byte[length];
             (new RNGCryptoServiceProvider()).GetBytes(buffer);
-            return Convert.ToBase64String(buffer);
+            return buffer;
         }
-
     }
 }

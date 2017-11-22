@@ -14,33 +14,31 @@ namespace XData.Data.Services
     public partial class XmlService : DataService
     {
         public XmlDatabase Database { get; private set; }
-
         public XmlModifier Modifier { get; private set; }
+
+        protected ODataQuerier<XElement> ODataQuerier;
 
         public XmlService(IEnumerable<KeyValuePair<string, string>> keyValues)
             : this(ConfigurationManager.ConnectionStrings[0].Name, keyValues)
         {
         }
 
-        protected XmlService(string name, IEnumerable<KeyValuePair<string, string>> keyValues)
+        public XmlService(string name, IEnumerable<KeyValuePair<string, string>> keyValues)
             : base(name, keyValues)
         {
             Modifier = XmlModifier.Create(name);
             Database = Modifier.Database;
-
-            RegisterEvents();
+            ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
         }
 
-        public static DateTime GetNow()
+        public DateTime GetNow()
         {
-            string name = ConfigurationManager.ConnectionStrings[0].Name;
-            return ODataQuerier.GetNow(name);
+            return ODataQuerier.GetNow();
         }
 
-        public static DateTime GetUtcNow()
+        public DateTime GetUtcNow()
         {
-            string name = ConfigurationManager.ConnectionStrings[0].Name;
-            return ODataQuerier.GetUtcNow(name);
+            return ODataQuerier.GetUtcNow();
         }
 
         protected const string XSI = "http://www.w3.org/2001/XMLSchema-instance";
@@ -48,9 +46,6 @@ namespace XData.Data.Services
         public XElement Get()
         {
             DataSource dataSource = new DataSourceCreator(Name, KeyValues).Create();
-
-            ODataQuerier<XElement> oDataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
-
             if (dataSource.GetType() == typeof(PagingDataSource))
             {
                 PagingDataSource ds = dataSource as PagingDataSource;
@@ -59,17 +54,17 @@ namespace XData.Data.Services
                 XElement xsd;
                 if (ds.Expands == null || ds.Expands.Length == 0)
                 {
-                    xCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Parameters, out xsd);
+                    xCollection = ODataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Parameters, out xsd);
                 }
                 else
                 {
-                    xCollection = oDataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters, out xsd);
+                    xCollection = ODataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters, out xsd);
                 }
                 string collection = GetCollection(Schema, ds.Entity);
                 XElement element = new XElement(collection, xCollection);
                 element.SetAttributeValue(XNamespace.Xmlns + "i", XSI);
 
-                int count = oDataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
+                int count = ODataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
 
                 return Pack(element, count, xsd);
             }
@@ -81,11 +76,11 @@ namespace XData.Data.Services
                 XElement xsd;
                 if (ds.Expands == null || ds.Expands.Length == 0)
                 {
-                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Parameters, out xsd);
+                    xCollection = ODataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Parameters, out xsd);
                 }
                 else
                 {
-                    xCollection = oDataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Expands, ds.Parameters, out xsd);
+                    xCollection = ODataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Expands, ds.Parameters, out xsd);
                 }
                 string collection = GetCollection(Schema, ds.Entity);
                 XElement element = new XElement(collection, xCollection);
@@ -96,14 +91,14 @@ namespace XData.Data.Services
             else if (dataSource.GetType() == typeof(DefaultGetterDataSource))
             {
                 DefaultGetterDataSource ds = dataSource as DefaultGetterDataSource;
-                XElement element = oDataQuerier.GetDefault(dataSource.Entity, ds.Select, out XElement xsd);
+                XElement element = ODataQuerier.GetDefault(dataSource.Entity, ds.Select, out XElement xsd);
                 element.SetAttributeValue(XNamespace.Xmlns + "i", XSI);
                 return Pack(element, null, xsd);
             }
             else if (dataSource.GetType() == typeof(CountDataSource))
             {
                 CountDataSource ds = dataSource as CountDataSource;
-                int count = oDataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
+                int count = ODataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
                 return new XElement("Count", count);
             }
 

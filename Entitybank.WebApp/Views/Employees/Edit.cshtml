@@ -27,7 +27,7 @@
 
             $('#form').find(':submit').val('Update');
 
-            $.getJSON('/json')
+            $.getJSON('/api')
                 .done(function (data, textStatus, jqXHR) {
                     $('#form').deserializeObject(data[0]);
 
@@ -37,7 +37,7 @@
                             var $form = $(event.target);
                             var bv = $form.data('bootstrapValidator');
                             var obj = $form.serializeObject();
-                            $.put('/json', obj)
+                            $.put('/api', obj)
                                 .done(function (data, textStatus, jqXHR) {
                                     var redirect = bv.$submitButton.attr("data-redirect-url") + window.location.search;
                                     window.location.href = redirect;

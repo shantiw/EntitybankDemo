@@ -14,50 +14,43 @@ namespace XData.Data.Security
         public byte[] Key { get; private set; } = null;
         public byte[] IV { get; private set; } = null;
 
+        protected SymmetricAlgorithm Algorithm { get; private set; }
+
         public SymmetricCryptor()
         {
+            Algorithm = CreateSymmetricAlgorithm();
+            Key = Algorithm.Key;
+            IV = Algorithm.IV;
+        }
+
+        public SymmetricCryptor(string base64StringKey, string base64StringIV)
+        {
+            Key = Convert.FromBase64String(base64StringKey);
+            IV = Convert.FromBase64String(base64StringIV);
+            Algorithm = CreateSymmetricAlgorithm();
+            Algorithm.Key = Key;
+            Algorithm.IV = IV;
         }
 
         public SymmetricCryptor(byte[] key, byte[] iv)
         {
             Key = key;
             IV = iv;
+            Algorithm = CreateSymmetricAlgorithm();
+            Algorithm.Key = Key;
+            Algorithm.IV = IV;
         }
 
-        public virtual string Encrypt(string str)
+        public virtual string Encrypt(string value)
         {
-            SymmetricAlgorithm algorithm = GetSymmetricAlgorithm();
-            return Encrypt(algorithm, str);
+            return Encrypt(Algorithm, value);
         }
 
         public virtual string Decrypt(string encryptedString)
         {
-            SymmetricAlgorithm algorithm = GetSymmetricAlgorithm();
-            string text = Decrypt(algorithm, encryptedString);
+            string text = Decrypt(Algorithm, encryptedString);
             text = text.TrimEnd('\0');
             return text;
-        }
-
-        protected virtual SymmetricAlgorithm GetSymmetricAlgorithm()
-        {
-            SymmetricAlgorithm algorithm = CreateSymmetricAlgorithm();
-            if (Key == null)
-            {
-                Key = algorithm.Key;
-            }
-            else
-            {
-                algorithm.Key = Key;
-            }
-            if (IV == null)
-            {
-                IV = algorithm.IV;
-            }
-            else
-            {
-                algorithm.IV = IV;
-            }
-            return algorithm;
         }
 
         protected abstract SymmetricAlgorithm CreateSymmetricAlgorithm();
@@ -81,10 +74,9 @@ namespace XData.Data.Security
         {
             byte[] cipherBytes = HexConverter.GetBytes(encrypted);
 
-            using (MemoryStream memoryStream = new MemoryStream(cipherBytes))
+            using (MemoryStream ms = new MemoryStream(cipherBytes))
             {
-                using (CryptoStream cs = new CryptoStream(memoryStream,
-                    algorithm.CreateDecryptor(), CryptoStreamMode.Read))
+                using (CryptoStream cs = new CryptoStream(ms, algorithm.CreateDecryptor(), CryptoStreamMode.Read))
                 {
                     byte[] plainBytes = new byte[cipherBytes.Length];
                     cs.Read(plainBytes, 0, cipherBytes.Length);

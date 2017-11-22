@@ -34,6 +34,7 @@
       <HintPath>..\Evaluator.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,9 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountService.cs" />
+    <Compile Include="AsymmetricCryptoService.cs" />
     <Compile Include="ConfigService.cs" />
     <Compile Include="DataService.cs" />
-    <Compile Include="JsonService.events.cs" />
     <Compile Include="OData\ConfigXDataSourceFinder.cs" />
     <Compile Include="OData\DataSource.cs" />
     <Compile Include="OData\DataSourceCreator.cs" />
@@ -54,9 +56,12 @@
     <Compile Include="JavaScriptEvaluator.cs" />
     <Compile Include="JsonService.cs" />
     <Compile Include="OData\XDataSourceProvider.cs" />
+    <Compile Include="PasswordSecurity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SettingsService.cs" />
+    <Compile Include="ThreadDataStore.cs" />
+    <Compile Include="ValidationHelper.cs" />
     <Compile Include="XmlService.cs" />
-    <Compile Include="XmlService.events.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\fw-eb\Entitybank\Entitybank.csproj">

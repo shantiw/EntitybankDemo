@@ -1,0 +1,77 @@
+﻿
+@{
+    ViewBag.Title = "Settings";
+}
+
+<br />
+<h3>Membership settings</h3>
+<hr />
+
+<form id="form" class="form form-horizontal" role="form"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-message="This value is not valid">
+    <div class="form-group">
+        <div data-plugin="errorRenderer" class="col-sm-offset-2 text-danger">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">PasswordFormat:</label>
+        <div class="col-sm-4">
+            <select name="PasswordFormat" class="form-control">
+                <option value="Clear">Clear</option>
+                <option value="Encrypted">Encrypted</option>
+                <option value="Hashed">Hashed</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">MaxInvalidPwdAttempts:</label>
+        <div class="col-sm-4">
+            <input name="MaxInvalidPasswordAttempts" class="form-control" type="text"
+                   required data-bv-notempty-message="The MaxInvalidPasswordAttempts is required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">PasswordAttemptWindow:</label>
+        <div class="col-sm-4">
+            <input name="PasswordAttemptWindow" class="form-control" type="text"
+                   required data-bv-notempty-message="The PasswordAttemptWindow is required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-2">
+            <input type="submit" class="btn btn-primary" value="Reset" data-redirect-url="/Admin/Settings/Index" />
+            <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
+        </div>
+    </div>
+</form>
+
+<br />
+<h3>Initial password settings</h3>
+<hr />
+
+<form id="form" class="form form-horizontal" role="form"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-message="This value is not valid">
+    <div class="form-group">
+        <div data-plugin="errorRenderer" class="col-sm-offset-2 text-danger">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">InitialPassword:</label>
+        <div class="col-sm-4">
+            <input name="InitialPassword" class="form-control" type="text"
+                   required data-bv-notempty-message="The InitialPassword is required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-2">
+            <input type="submit" class="btn btn-primary" value="Reset" data-redirect-url="/Admin/Settings/Index" />
+            <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
+        </div>
+    </div>
+</form>

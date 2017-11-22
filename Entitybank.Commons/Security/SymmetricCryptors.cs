@@ -15,6 +15,11 @@ namespace XData.Data.Security
         {
         }
 
+        public DESCryptor(string base64StringKey, string base64StringIV)
+            : base(base64StringKey, base64StringIV)
+        {
+        }
+
         public DESCryptor(byte[] key, byte[] iv) : base(key, iv)
         {
         }
@@ -34,6 +39,11 @@ namespace XData.Data.Security
     public class RC2Cryptor : SymmetricCryptor
     {
         public RC2Cryptor() : base()
+        {
+        }
+
+        public RC2Cryptor(string base64StringKey, string base64StringIV)
+            : base(base64StringKey, base64StringIV)
         {
         }
 
@@ -59,6 +69,11 @@ namespace XData.Data.Security
         {
         }
 
+        public AesCryptor(string base64StringKey, string base64StringIV)
+            : base(base64StringKey, base64StringIV)
+        {
+        }
+
         public AesCryptor(byte[] key, byte[] iv) : base(key, iv)
         {
         }
@@ -81,6 +96,11 @@ namespace XData.Data.Security
         {
         }
 
+        public RijndaelCryptor(string base64StringKey, string base64StringIV)
+            : base(base64StringKey, base64StringIV)
+        {
+        }
+
         public RijndaelCryptor(byte[] key, byte[] iv) : base(key, iv)
         {
         }
@@ -100,6 +120,11 @@ namespace XData.Data.Security
     public class TripleDESCryptor : SymmetricCryptor
     {
         public TripleDESCryptor() : base()
+        {
+        }
+
+        public TripleDESCryptor(string base64StringKey, string base64StringIV)
+            : base(base64StringKey, base64StringIV)
         {
         }
 

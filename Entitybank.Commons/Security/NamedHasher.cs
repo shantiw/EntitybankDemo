@@ -22,10 +22,10 @@ namespace XData.Data.Security
             HashName = hashName;
         }
 
-        public override string Hash(string str, string salt)
+        public override string Hash(string value, byte[] salt)
         {
             HashAlgorithm hashAlgorithm = HashAlgorithm.Create(HashName);
-            return Hash(hashAlgorithm, str, salt);
+            return Hash(hashAlgorithm, value, salt);
         }
 
     }

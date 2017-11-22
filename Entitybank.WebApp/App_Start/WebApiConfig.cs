@@ -21,7 +21,10 @@ namespace XData.Web
             );
 
             //
+            config.Filters.Add(new XData.Web.Http.Filters.HttpAuthorizationFilterAttribute());
+            config.Filters.Add(new XData.Web.Http.Filters.HttpActionFilterAttribute());
             config.Filters.Add(new XData.Web.Http.Filters.HttpExceptionFilterAttribute());
+
         }
     }
 }

@@ -1,0 +1,49 @@
+﻿
+@{
+    ViewBag.Title = "Settings";
+}
+
+<br />
+<h3>Membership settings</h3>
+<hr />
+
+<div class="row">
+    <div class="col-sm-2">
+        <label class="pull-right">PasswordFormat:</label>
+    </div>
+    <div class="col-sm-4">
+        <p>{{PasswordFormat}}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2">
+        <label class="pull-right">MaxInvalidPwdAttempts:</label>
+    </div>
+    <div class="col-sm-4">
+        <p>{{MaxInvalidPasswordAttempts}}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2">
+        <label class="pull-right">PasswordAttemptWindow:</label>
+    </div>
+    <div class="col-sm-4">
+        <p>{{PasswordAttemptWindow}}</p>
+    </div>
+</div>
+
+<br />
+<h3>Initial password settings</h3>
+<hr />
+
+<div class="row">
+    <div class="col-sm-2">
+        <label class="pull-right">InitialPassword:</label>
+    </div>
+    <div class="col-sm-4">
+        <p>{{InitialPassword}}</p>
+    </div>
+</div>
+
+<hr />
+<a class="btn btn-primary" href="/Admin/Settings/Edit">Edit settings</a>

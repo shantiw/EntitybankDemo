@@ -30,13 +30,13 @@
 
     <script>
         $(document).ready(function () {
-            $.getJSON('/json', {}, function (data, textStatus, jqXHR) {
+            $.getJSON('/api', {}, function (data, textStatus, jqXHR) {
                 $('#details').renderer(data);
             });
 
             $(':submit').click(function (event) {
                 event.preventDefault();
-                $.delete('/json')
+                $.delete('/api')
                     .done(function (data, textStatus, jqXHR) {
                         var redirect = $(':submit').attr("data-redirect-url") + window.location.search;
                         window.location.href = redirect;

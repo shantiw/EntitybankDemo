@@ -92,17 +92,23 @@
         $(document).ready(function () {
             $('select[data-name]').initializer();
 
-            $.getJSON('/json?name=allRoles', {}, function (data, textStatus, jqXHR) {
+            $.getJSON('/api?name=allRoles', {}, function (data, textStatus, jqXHR) {
                 $('#roles').renderer(data);
             });
 
             $('#employee-name').click(function (event) {
                 var $element = $('#employee-name');
                 $('#employee-dialog').selectDialog({
-                    url: "/json?name=employee-dialog",
+                    url: "/api?name=employee-dialog",
                     done: function (result) {
-                        $element.siblings().filter(':hidden').val(result["Id"]);
-                        $element.val(result["Name"]);
+                        if (result == null) {
+                            $element.siblings().filter(':hidden').val('');
+                            $element.val('');
+                        }
+                        else {
+                            $element.siblings().filter(':hidden').val(result["Id"]);
+                            $element.val(result["Name"]);
+                        }
                     }
                 });
             });
