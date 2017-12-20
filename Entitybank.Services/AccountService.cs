@@ -28,7 +28,7 @@ namespace XData.Data.Services
         public AccountService(string name)
         {
             Name = name;
-            Schema = GetSchema(name, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("name", "account") });
+            Schema = GetSchema(name, new List<KeyValuePair<string, string>>());
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
             Modifier = XmlModifier.Create(name, Schema);
         }
@@ -54,21 +54,21 @@ namespace XData.Data.Services
 
             string passwordValue = null;
 
-            XElement user = GetUser(userName);
-            if (user == null)
+            XElement xUser = GetUser(userName);
+            if (xUser == null)
             {
                 passwordValue = password;
                 errorMessage = "The user name or password is incorrect";
             }
             else
             {
-                if (ComparePassword(user, password))
+                if (ComparePassword(xUser, password))
                 {
-                    if (user.Element("IsDisabled").Value == true.ToString())
+                    if (xUser.Element("IsDisabled").Value == true.ToString())
                     {
                         errorMessage = "Your account has been disabled, Please contact the administrator";
                     }
-                    else if (user.Element("IsLockedOut").Value == true.ToString())
+                    else if (xUser.Element("IsLockedOut").Value == true.ToString())
                     {
                         errorMessage = "Your account has been locked, Please contact the administrator";
                     }
@@ -76,16 +76,17 @@ namespace XData.Data.Services
                     {
                         errorMessage = null;
                         result = true;
-                        UpdateLockedOutState(user, true);
+                        UpdateLockedOutState(xUser, true);
                     }
-                    xSecurityEntry.SetElementValue("CreatedUserId", user.Element("Id").Value);
+                    xSecurityEntry.SetElementValue("UserId", xUser.Element("Id").Value);
+                    xSecurityEntry.SetElementValue("CreatedUserId", xUser.Element("Id").Value);
                     xSecurityEntry.SetElementValue("CreatorName", GetLoginedUser(userName).Element("Name").Value);
                 }
                 else
                 {
                     passwordValue = password;
                     errorMessage = "The user name or password is incorrect";
-                    UpdateLockedOutState(user, false);
+                    UpdateLockedOutState(xUser, false);
                 }
             }
 
@@ -97,6 +98,7 @@ namespace XData.Data.Services
 
             Modifier.AppendCreate(xSecurityEntry);
             Modifier.Persist();
+            Modifier.Clear();
 
             return result;
         }
@@ -162,6 +164,10 @@ namespace XData.Data.Services
         {
             XElement xSecurityEntry = ThreadDataStore.RequestInfo.CreateSecurityEntry(ODataQuerier);
             xSecurityEntry.SetElementValue("Operation", "Logout");
+            if (xSecurityEntry.Element("CreatedUserId") != null)
+            {
+                xSecurityEntry.SetElementValue("UserId", xSecurityEntry.Element("CreatedUserId").Value);
+            }
             Modifier.Create(xSecurityEntry);
         }
 
@@ -175,23 +181,32 @@ namespace XData.Data.Services
 
             if (!PasswordSecurity.ValidatePassword(membershipSettings, newPassword, out string[] errorMessages))
             {
+                StringBuilder sb = new StringBuilder();
+                foreach (string errMessage in errorMessages)
+                {
+                    sb.AppendLine(errMessage);
+                }
                 xSecurityEntry.SetElementValue("Contents", string.Format("NewPassword:{0}", newPassword));
-                xSecurityEntry.SetElementValue("ErrorMessage", string.Join("\r", errorMessages));
+                xSecurityEntry.SetElementValue("ErrorMessage", sb.ToString());
                 xSecurityEntry.SetElementValue("IsFailed", true);
+                if (xSecurityEntry.Element("CreatedUserId") != null)
+                {
+                    xSecurityEntry.SetElementValue("UserId", xSecurityEntry.Element("CreatedUserId").Value);
+                }
                 Modifier.Create(xSecurityEntry);
 
                 throw ValidationHelper.CreateValidationException("NewPassword", errorMessages);
             }
 
             string errorMessage = null;
-            XElement user = GetUser(Thread.CurrentPrincipal.Identity.Name);
-            if (ComparePassword(user, password))
+            XElement xUser = GetUser(Thread.CurrentPrincipal.Identity.Name);
+            if (ComparePassword(xUser, password))
             {
-                if (user.Element("IsDisabled").Value == true.ToString())
+                if (xUser.Element("IsDisabled").Value == true.ToString())
                 {
                     errorMessage = "Your account has been disabled, Please contact the administrator";
                 }
-                else if (user.Element("IsLockedOut").Value == true.ToString())
+                else if (xUser.Element("IsLockedOut").Value == true.ToString())
                 {
                     errorMessage = "Your account has been locked, Please contact the administrator";
                 }
@@ -210,18 +225,30 @@ namespace XData.Data.Services
             }
 
             string encryptedPassword = PasswordSecurity.EncryptPassword(membershipSettings, newPassword, out int crypto, out string key, out string iv);
-            user.SetElementValue("Password", encryptedPassword);
-            user.SetElementValue("PasswordCrypto", crypto);
-            user.SetElementValue("PasswordKey", key ?? string.Empty);
-            user.SetElementValue("PasswordIV", iv ?? string.Empty);
+            xUser.SetElementValue("Password", encryptedPassword);
+            xUser.SetElementValue("PasswordCrypto", crypto);
+            xUser.SetElementValue("PasswordKey", key ?? string.Empty);
+            xUser.SetElementValue("PasswordIV", iv ?? string.Empty);
 
             DateTime now = ODataQuerier.GetNow();
             string nowString = new DotNETDateFormatter().Format(now);
-            user.SetElementValue("LastPasswordChangedDate", nowString);
+            xUser.SetElementValue("LastPasswordChangedDate", nowString);
 
-            Modifier.AppendUpdate(user);
+            Modifier.AppendUpdate(xUser);
             Modifier.AppendCreate(xSecurityEntry);
             Modifier.Persist();
+            Modifier.Clear();
+        }
+
+        public bool IsInRole(string userName, string roleName)
+        {
+            IEnumerable<XElement> elements = ODataQuerier.GetCollection("UserRole", null, "LoweredUserName eq @p1 and LoweredRoleName eq @p2", null,
+                new Dictionary<string, object>()
+                {
+                    { "@p1", userName.ToLower() },
+                    { "@p2", roleName.ToLower() }
+                });
+            return elements.Count() > 0;
         }
 
         protected XElement GetUser(string userName)

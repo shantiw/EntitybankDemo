@@ -13,5 +13,13 @@ namespace XData.Web.Controllers
         {
             return View();
         }
+
+        [Route("Details/{id}")]
+        public ActionResult Details(int id)
+        {
+            return View();
+        }
+
+
     }
 }

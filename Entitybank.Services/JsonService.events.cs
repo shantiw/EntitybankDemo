@@ -25,7 +25,12 @@ namespace XData.Data.Services
 
         private void Database_Inserting(object sender, InsertingEventArgs args)
         {
-            if (args.Entity == "Role")
+            if (args.Entity == "User")
+            {
+                string userName = args.AggregNode["UserName"].ToString();
+                args.AggregNode["LoweredUserName"] = userName.ToLower();
+            }
+            else if (args.Entity == "Role")
             {
                 string roleName = args.AggregNode["RoleName"].ToString();
                 args.AggregNode["LoweredRoleName"] = roleName.ToLower();
@@ -34,14 +39,32 @@ namespace XData.Data.Services
 
         private void Database_Inserted(object sender, InsertedEventArgs args)
         {
+            if (args.Entity == "User")
+            {
+
+            }
         }
 
         private void Database_Deleting(object sender, DeletingEventArgs args)
         {
+            if (args.Entity == "User")
+            {
+
+            }
         }
 
         private void Database_Updating(object sender, UpdatingEventArgs args)
         {
+            if (args.Entity == "User")
+            {
+                string userName = args.AggregNode["UserName"].ToString();
+                args.AggregNode["LoweredUserName"] = userName.ToLower();
+            }
+            else if (args.Entity == "Role")
+            {
+                string roleName = args.AggregNode["RoleName"].ToString();
+                args.AggregNode["LoweredRoleName"] = roleName.ToLower();
+            }
         }
 
 

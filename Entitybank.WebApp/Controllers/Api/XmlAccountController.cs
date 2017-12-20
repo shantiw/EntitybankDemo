@@ -13,12 +13,14 @@ namespace XData.Web.Http.Controllers
     public class XmlAccountController : ApiController
     {
         [Route()]
+        [AllowAnonymous]
         public XElement Get()
         {
             return XmlSecurity.GetPublicKey();
         }
 
         [Route()]
+        [AllowAnonymous]
         public XElement Post([FromBody]XElement value)
         {
             return XmlSecurity.Login(value);

@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.ComponentModel.DataAnnotations;
 using XData.Data.Objects;
 using XData.Data.OData;
+using XData.Data.Xml;
 
 namespace XData.Data.Services
 {
@@ -32,6 +34,7 @@ namespace XData.Data.Services
         protected readonly string Name;
         protected readonly XElement Schema;
         protected ODataQuerier<XElement> ODataQuerier;
+        protected XmlModifier Modifier;
 
         public SettingsService()
             : this(ConfigurationManager.ConnectionStrings[0].Name)
@@ -41,8 +44,9 @@ namespace XData.Data.Services
         public SettingsService(string name)
         {
             Name = name;
-            Schema = GetSchema(name, new List<KeyValuePair<string, string>>() { new KeyValuePair<string, string>("name", "admin") });
+            Schema = GetSchema(name, new List<KeyValuePair<string, string>>());
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
+            Modifier = XmlModifier.Create(name, Schema);
         }
 
         protected static XElement GetSchema(string name, IEnumerable<KeyValuePair<string, string>> deltaKey)
@@ -95,8 +99,80 @@ namespace XData.Data.Services
             InitialPasswordSettings initialPasswordSettings = new InitialPasswordSettings();
             IEnumerable<XElement> elements = ODataQuerier.GetCollection("Setting", null, "Catalog eq 'InitialPassword'", null);
             XElement element = elements.First();
-            initialPasswordSettings.InitialPassword = element.Element("initialPasswordSettings").Value;
+            initialPasswordSettings.InitialPassword = element.Element("Value").Value;
             return initialPasswordSettings;
+        }
+
+        public void SetMembershipSettings(MembershipSettings value)
+        {
+            Validate(value);
+
+            IEnumerable<XElement> elements = ODataQuerier.GetCollection("Setting", null, "Catalog eq 'Membership'", null);
+            XElement xSettings = new XElement("Settings");
+            xSettings.Add(elements);
+
+            XElement xItem = xSettings.Elements().First(x => x.Element("Name").Value == "PasswordFormat");
+            xItem.SetElementValue("Value", value.PasswordFormat);
+
+            xItem = xSettings.Elements().First(x => x.Element("Name").Value == "PasswordCrypto");
+            xItem.SetElementValue("Value", value.PasswordCrypto);
+
+            xItem = xSettings.Elements().First(x => x.Element("Name").Value == "PasswordHash");
+            xItem.SetElementValue("Value", value.PasswordHash);
+
+            xItem = xSettings.Elements().First(x => x.Element("Name").Value == "MaxInvalidPasswordAttempts");
+            xItem.SetElementValue("Value", value.MaxInvalidPasswordAttempts);
+
+            xItem = xSettings.Elements().First(x => x.Element("Name").Value == "PasswordAttemptWindow");
+            xItem.SetElementValue("Value", value.PasswordAttemptWindow);
+
+            xItem = xSettings.Elements().First(x => x.Element("Name").Value == "MinRequiredPasswordLength");
+            xItem.SetElementValue("Value", value.MinRequiredPasswordLength);
+
+            xItem = xSettings.Elements().First(x => x.Element("Name").Value == "MinRequiredNonAlphanumericCharacters");
+            xItem.SetElementValue("Value", value.MinRequiredNonAlphanumericCharacters);
+
+            xItem = xSettings.Elements().First(x => x.Element("Name").Value == "PasswordStrengthRegularExpression");
+            xItem.SetElementValue("Value", value.PasswordStrengthRegularExpression);
+
+            Modifier.Update(xSettings);
+        }
+
+        protected void Validate(MembershipSettings value)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (value.PasswordFormat < 0) sb.AppendLine("The PasswordFormat must be one of {Clear, Hashed, Encrypted}");
+            if (value.PasswordCrypto < 0) sb.AppendLine("The PasswordCrypto must be one of {Aes, DES, RC2, Rijndael, TripleDES}");
+            if (value.PasswordHash < 0) sb.AppendLine("The PasswordHash must be one of {MD5, SHA1, SHA256, SHA384, SHA512}");
+            if (value.MaxInvalidPasswordAttempts < 0) sb.AppendLine("The MaxInvalidPasswordAttempts must be a non-negative number");
+            if (value.PasswordAttemptWindow < 0) sb.AppendLine("The PasswordAttemptWindow must be a non-negative number");
+            if (value.MinRequiredPasswordLength < 0) sb.AppendLine("The MinRequiredPasswordLength must be a non-negative number");
+            if (value.MinRequiredNonAlphanumericCharacters < 0) sb.AppendLine("The MinRequiredNonAlphanumericCharacters must be a non-negative number");
+
+            string errorMessage = sb.ToString();
+            if (!string.IsNullOrWhiteSpace(errorMessage)) throw ValidationHelper.CreateValidationException(errorMessage);
+        }
+
+        public void SetInitialPasswordSettings(InitialPasswordSettings value)
+        {
+            Validate(value);
+
+            IEnumerable<XElement> elements = ODataQuerier.GetCollection("Setting", null, "Catalog eq 'InitialPassword'", null);
+            XElement element = elements.First();
+            element.SetElementValue("InitialPassword", value.InitialPassword);
+            Modifier.Update(element);
+        }
+
+        protected void Validate(InitialPasswordSettings value)
+        {
+            if (string.IsNullOrWhiteSpace(value.InitialPassword))
+            {
+                throw ValidationHelper.CreateValidationException("The InitialPassword is required and cannot be empty");
+            }
+            if (value.InitialPassword.Length < 6 || value.InitialPassword.Length >= 20)
+            {
+                throw ValidationHelper.CreateValidationException("The InitialPassword must be at least 6 and not more than 20 characters long");
+            }
         }
 
 

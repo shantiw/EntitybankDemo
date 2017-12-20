@@ -233,8 +233,7 @@
     <Content Include="entitybank\ora\instance.config" />
     <Content Include="entitybank\ora\mapping.config" />
     <Content Include="entitybank\ora\revise.config" />
-    <Content Include="entitybank\sql\deltas\delta1.config" />
-    <Content Include="entitybank\sql\deltas\account.config" />
+    <None Include="Wiki\delta1.config" />
     <Content Include="entitybank\sql\instance.config" />
     <Content Include="entitybank\sql\mapping.config" />
     <Content Include="entitybank\sql\revise.config" />
@@ -323,7 +322,11 @@
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
     <Content Include="entitybank\sql\datasources\users.config" />
-    <Content Include="entitybank\sql\deltas\admin.config" />
+    <Content Include="entitybank\sql\datasources\securityLog.config" />
+    <Content Include="Views\SecurityLog\Details.cshtml" />
+    <Content Include="entitybank\sql\deltas\security.config" />
+    <None Include="Wiki\error.json" />
+    <None Include="Wiki\error.xml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.2.1.js" />
     <Content Include="Scripts\jquery-3.2.1.min.js" />
@@ -387,6 +390,7 @@
     <Content Include="Views\Settings\Edit.cshtml" />
     <Content Include="Views\SecurityLog\Index.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
+    <None Include="Wiki\revise.config" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -12,7 +12,7 @@
     </div>
     <div class="form-group" style="margin-right:20px">
         <label class="control-label">Gender&nbsp;</label>
-        <select data-name="genders" data-empty-html="&nbsp;All" name="Gender" class="form-control">
+        <select data-name="Genders" data-empty-html="&nbsp;All" name="Gender" class="form-control">
             <option value="{{Id}}">&nbsp;{{Name}}&nbsp;&nbsp;</option>
         </select>
     </div>
@@ -32,9 +32,9 @@
 <br />
 
 <input name="header" id="header" type="hidden" value="0" />
-<input name="updown" id="updown" type="hidden" value="1" />
+<input name="sortDirection" id="sortDirection" type="hidden" value="1" />
 <table class="table table-bordered table-condensed table-striped">
-    <thead data-plugin="tableHeadSorter" data-header-element="header" data-updown-element="updown">
+    <thead data-plugin="tableHeadSorter" data-header-element="header" data-sortDirection-element="sortDirection">
         <tr>
             <th class="sort-both" data-header="1">Username</th>
             <th class="sort-both" data-header="2">Name</th>
@@ -60,7 +60,7 @@
             <td>{{Email}}</td>
             <td>{{stringfyRoles(Roles)}}</td>
             <td style="border-right-width:0px">
-                <a href="javascript:void(0);" style="padding-right:0px" class="btn" onclick="enable('{{Id}}','{{IsDisabled}}');">
+                <a href="javascript:void(0);" style="padding-right:0px" class="btn" onclick="enable('{{Id}}','{{UserName}}','{{IsDisabled}}');">
                     {{IsDisabled ? 'Enable' : 'Disable'}}
                 </a>
             </td>
@@ -130,22 +130,32 @@
             return (result.length == 0) ? result : result.slice(0, -1);
         }
 
-        var enable = function (id, isDisabled) {
-            if (isDisabled) {
-
-            }
-            else {
-
-            }
-
-            location.reload(true);
+        var enable = function (id, username, isDisabled) {
+            var action = '/Admin/Api/Users/Status';
+            var isdisabled = isDisabled == 'true';
+            $.put(action, { "Id": id, "IsDisabled": !isdisabled })
+                .done(function (data, textStatus, jqXHR) {
+                    var text = isdisabled ? 'Enabled' : 'Disabled';
+                    alert("The user '" + username + "' has been " + text + ".");
+                    location.reload(true);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    alert('Error:' + errorThrown);
+                    location.reload(true);
+                });
         };
 
         var unlock = function (id, username) {
-            if (window.confirm("Unlock " + username + "?")) {
-                alert(id);
-                location.reload(true);
-            }
+            var action = '/Admin/Api/Users/LockoutStatus';
+            $.put(action, { "Id": id })
+                .done(function (data, textStatus, jqXHR) {
+                    alert("The user '" + username + "' has been unlocked.");
+                    location.reload(true);
+                })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                    alert('Error:' + errorThrown);
+                    location.reload(true);
+                });
         };
 
         $(document).ready(function () {

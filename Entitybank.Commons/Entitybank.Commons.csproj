@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Compression\DeflateCompressor.cs" />
     <Compile Include="Compression\GZipCompressor.cs" />
+    <Compile Include="Dynamic\DynamicDictionary.cs" />
     <Compile Include="Helpers\HexConverter.cs" />
     <Compile Include="Log\Log.cs" />
     <Compile Include="Net.Http\JsonHttpClient.cs" />

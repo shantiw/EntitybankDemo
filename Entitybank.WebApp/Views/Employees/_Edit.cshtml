@@ -12,13 +12,13 @@
         <label class="col-sm-2 control-label">Name:</label>
         <div class="col-sm-4">
             <input name="Name" class="form-control" type="text"
-                   required data-bv-notempty-message="The name is required" />
+                   required data-bv-notempty-message="The name is required and cannot be empty" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">Gender:</label>
         <div class="col-sm-4">
-            <select data-name="genders" name="Gender" class="form-control">
+            <select data-name="Genders" name="Gender" class="form-control">
                 <option value="{{Id}}">&nbsp;{{Name}}&nbsp;&nbsp;</option>
             </select>
         </div>
@@ -72,7 +72,7 @@
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-2">
-            <input type="submit" class="btn btn-primary" value="" data-redirect-url="/Admin/Roles/Index" />
+            <input type="submit" class="btn btn-primary" value="" data-redirect-url="/Admin/Employees/Index" />
             <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
         </div>
     </div>

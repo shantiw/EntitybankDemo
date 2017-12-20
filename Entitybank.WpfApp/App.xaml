@@ -1,0 +1,12 @@
+﻿<Application x:Class="XData.Windows.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:XData.Windows"
+             Startup="App_Startup"
+             Exit="App_Exit"
+             DispatcherUnhandledException="App_DispatcherUnhandledException"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

@@ -3,7 +3,162 @@
     ViewBag.Title = "Security log";
 }
 
-<h2>Security log</h2>
-<hr />
+<br />
 
+<form id="form" class="form-horizontal" role="form">
+    <div class="form-group">
+        <label class="col-sm-1 control-label">Operation</label>
+        <div class="col-sm-3">
+            <select name="Operation" class="form-control">
+                <option value="">All</option>
+                <option value="Login">Login</option>
+                <option value="Logout">Logout</option>
+                <option value="ChangePassword">ChangePassword</option>
+                <option value="ResetPassword">ResetPassword</option>
+                <option value="Enable">Enable</option>
+                <option value="Disable">Disable</option>
+                <option value="Unlock">Unlock</option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <div class="input-group">
+                <span class="input-group-addon" style="background-color:white">
+                    <select name="combine" style="outline:none; border:none; background-color:transparent">
+                        <option value="1">Text</option>
+                        <option value="2">Contents</option>
+                        <option value="3">HostAddr</option>
+                        <option value="4">Accept</option>
+                        <option value="5">UserAgent</option>
+                    </select>
+                </span>
+                <input name="word" type="text" class="form-control">
+            </div>
+        </div>
+        <label class="col-sm-1 control-label">Status</label>
+        <div class='col-sm-2'>
+            <select name="IsFailed" class="form-control">
+                <option value="">All</option>
+                <option value="0">Successful</option>
+                <option value="1">Failed</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-1 control-label">Date</label>
+        <div class='col-sm-3'>
+            <div class='input-group date'>
+                <input name="date1" class="form-control" type="text" readonly />
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+            </div>
+        </div>
+        <div class='col-sm-3'>
+            <div class='input-group date'>
+                <input name="date2" class="form-control" type="text" readonly />
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-calendar"></i>
+                </span>
+            </div>
+        </div>
+        <label class="col-sm-1 control-label">Operator</label>
+        <div class='col-sm-2'>
+            <input name="Operator" class="form-control" type="text" />
+        </div>
+        <div class='col-sm-2'>
+            <button class="btn btn-info" type="button"
+                    data-plugin="filterer"
+                    data-value-elements="Operation,combine,word,IsFailed,date1,date2,Operator">
+                <i class="glyphicon glyphicon-search"></i>&nbsp;Query
+            </button>
+        </div>
+    </div>
+</form>
 
+<br />
+
+<input name="header" id="header" type="hidden" value="0" />
+<input name="sortDirection" id="sortDirection" type="hidden" value="1" />
+<table style="margin-top:2px;table-layout:fixed;width:100%" class="table table-bordered table-condensed table-striped">
+    <thead data-plugin="tableHeadSorter" data-header-element="header" data-sortDirection-element="sortDirection">
+        <tr>
+            <th class="sort-both" data-header="1" style="width:90px;min-width:90px">Date</th>
+            <th class="sort-both" data-header="2" style="width:100px;min-width:100px">Operation</th>
+            <th class="sort-both" data-header="3">Operator</th>
+            <th class="sort-both" data-header="4" style="width:80px;min-width:80px">IsFailed</th>
+            <th class="sort-both" data-header="5">Contents</th>
+            <th class="sort-both" data-header="6" style="width:90px;min-width:90px">HostAddr</th>
+            <th class="sort-both" data-header="7">Accept</th>
+            <th class="sort-both" data-header="8">UserAgent</th>
+            <th style="width:80px;min-width:80px"></th>
+        </tr>
+    </thead>
+    <tbody data-plugin="renderer" class="invisible">
+        <tr>
+            <td>{{var m = moment(CreatedDate); m.isValid() ? m.format('YYYY-MM-DD hh:mm:ss') : ''}}</td>
+            <td style="overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap">{{Operation}}</td>
+            <td>{{CreatorName}}</td>
+            <td>{{IsFailed ? 'X' : ''}}</td>
+            <td style="overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap">{{Contents}}</td>
+            <td>{{UserHostAddress}}</td>
+            <td style="overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap">{{Accept}}</td>
+            <td style="overflow:hidden;text-overflow:ellipsis;word-break:keep-all;white-space:nowrap">{{UserAgent}}</td>
+            <td>
+                <a href="/Admin/SecurityLog/Details/{{Id}}">
+                    <i class="glyphicon glyphicon-list-alt"></i>&nbsp;Details
+                </a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<hr style="margin-top: 0px; padding-top: 0px; border-top: 2px solid #dddddd" />
+
+<span data-plugin="paginationInfo" style="margin-right: 32px; margin-top: 8px; float: left" data-html="{{itemCount}} results"></span>
+
+<ul data-plugin="pagination" style="display: inline" class="pagination"></ul>
+
+<label style="margin-left: 16px">To</label>
+<input id="paginationGoValue" class="form-control input-sm" type="number" min="1" max="50" style="padding: 0px; padding-left: 4px; height: 28px; width: 42px; display: inline" />
+<button data-plugin="paginationGo" style="margin-bottom: 0px" class="btn btn-info btn-sm" type="button"
+        data-value-element="paginationGoValue">
+    Go
+</button>
+
+<div class="pull-right">
+    <label>Size</label>
+    <select data-plugin="pageSizer" name="pageSize" class="form-control input-sm" style="padding-left: 10px; padding-right: 2px; width: 60px; display: inline-block">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="30">30</option>
+        <option value="40">40</option>
+        <option value="50">50</option>
+    </select>
+</div>
+
+@section styles
+{
+    <link href="~/frontend/xfront/css/xfront.css" rel="stylesheet" />
+}
+
+@section scripts
+{
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/Scripts/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#form [name=date1]').parent().datetimepicker({
+                format: 'YYYY-MM-DD',
+                ignoreReadonly: true
+            });
+
+            $('#form [name=date2]').parent().datetimepicker({
+                format: 'YYYY-MM-DD',
+                ignoreReadonly: true
+            });
+
+            $('body').pagingQuerier();
+        });
+    </script>
+}

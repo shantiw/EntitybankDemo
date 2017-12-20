@@ -112,8 +112,14 @@ namespace XData.Data.Services
 
         protected static XElement GetSchema(string name, IEnumerable<KeyValuePair<string, string>> deltaKey)
         {
+            List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("security", "non-admin")
+            };
+            list.AddRange(deltaKey);
+
             SchemaProvider schemaProvider = new SchemaProvider(name);
-            return schemaProvider.GetSchema(deltaKey);
+            return schemaProvider.GetSchema(list);
         }
 
 

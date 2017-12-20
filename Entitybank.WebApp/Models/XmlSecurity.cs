@@ -11,8 +11,8 @@ namespace XData.Web.Models
 {
     public static class XmlSecurity
     {
-        private static AccountService AccountService = new AccountService();
-        private static AsymmetricCryptoService AsymmetricCryptoService = new AsymmetricCryptoService();
+        private static AccountService AccountService { get => new AccountService(); }
+        private static AsymmetricCryptoService AsymmetricCryptoService { get => new AsymmetricCryptoService(); }
 
         public static XElement Login(XElement value)
         {

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<samples>
+
+  <Error>
+    <Message>Authorization has been denied for this request.</Message>
+  </Error>
+
+  <Error>
+    <Message>An error has occurred.</Message>
+    <ExceptionMessage>Object reference not set to an instance of an object.</ExceptionMessage>
+    <ExceptionType>System.NullReferenceException</ExceptionType>
+    <StackTrace>
+    </StackTrace>
+  </Error>
+
+  <Error>
+    <ValidationResult>
+      <ErrorMessage>The user name or password is incorrect</ErrorMessage>
+    </ValidationResult>
+  </Error>
+
+  <Error>
+    <ValidationResult>
+      <MemberName>Path1</MemberName>
+      <MemberName>Path2</MemberName>
+      <ErrorMessage>Validation1</ErrorMessage>
+    </ValidationResult>
+    <ValidationResult>
+      <MemberName>Path1</MemberName>
+      <MemberName>Path2</MemberName>
+      <ErrorMessage>Validation2</ErrorMessage>
+    </ValidationResult>
+  </Error>
+
+</samples>

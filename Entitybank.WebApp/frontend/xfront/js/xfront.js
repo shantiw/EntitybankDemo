@@ -190,6 +190,10 @@ if (typeof jQuery === 'undefined') {
         $querier.deserializeObject(searchObj);
 
         var obj = $querier.serializeObject();
+        for (var name in obj) {
+            var value = $.trim(obj[name]);
+            obj[name] = value;
+        }
         obj.pageIndex = searchObj.pageIndex;
 
         $.getJSON($url, obj, function (data, textStatus, jqXHR) {
@@ -686,9 +690,14 @@ if (typeof jQuery === 'undefined') {
         if (data == null) return;
 
         var aggr = '';
-        $.each(data, function (index, item) {
-            aggr += getHtml(html, item);
-        });
+        if ($.isArray(data)) {
+            $.each(data, function (index, item) {
+                aggr += getHtml(html, item);
+            });
+        }
+        else {
+            aggr += getHtml(html, data);
+        }
         $container.html(aggr);
 
         $container.find('[data-date-format]').each(function (index, element) {
@@ -1040,7 +1049,7 @@ if (typeof jQuery === 'undefined') {
 
 }(jQuery);
 
-// tableHeadSorter options: {value,change(value)} // value: {"header":2,"updown":1}
+// tableHeadSorter options: {value,change(value)} // value: {"header":2,"sortDirection":1}
 +function ($) {
     "use strict";
 
@@ -1052,10 +1061,10 @@ if (typeof jQuery === 'undefined') {
         if (this.$headerElement.length == 0) {
             this.$headerElement = $('#' + headerElement);
         }
-        var updownElement = this.$element.attr('data-updown-element');
-        this.$updownElement = $(updownElement);
-        if (this.$updownElement.length == 0) {
-            this.$updownElement = $('#' + updownElement);
+        var sdElement = this.$element.attr('data-sortDirection-element');
+        this.$sdElement = $(sdElement);
+        if (this.$sdElement.length == 0) {
+            this.$sdElement = $('#' + sdElement);
         }
         this.options = $.extend({}, TableHeadSorter.DEFAULTS, options);
 
@@ -1065,7 +1074,7 @@ if (typeof jQuery === 'undefined') {
         $th.click(function (event) {
             event.preventDefault();
             var $he = instance.$headerElement;
-            var $ud = instance.$updownElement;
+            var $sd = instance.$sdElement;
             var change = instance.options.change;
 
             if ($(this).hasClass('sort-asc')) {
@@ -1073,14 +1082,14 @@ if (typeof jQuery === 'undefined') {
                 $(this).addClass('sort-desc');
                 var header = $(this).attr('data-header');
                 $he.val(header);
-                $ud.val(1);
+                $sd.val(1);
             }
             else if ($(this).hasClass('sort-desc')) {
                 $(this).removeClass('sort-desc');
                 $(this).addClass('sort-asc');
                 var header = $(this).attr('data-header');
                 $he.val(header);
-                $ud.val(0);
+                $sd.val(0);
             }
             else if ($(this).hasClass('sort-both')) {
                 $th.removeClass('sort-asc').removeClass('sort-desc').addClass('sort-both');
@@ -1088,7 +1097,7 @@ if (typeof jQuery === 'undefined') {
                 $(this).addClass('sort-asc');
                 var header = $(this).attr('data-header');
                 $he.val(header);
-                $ud.val(0);
+                $sd.val(0);
             }
             else {
                 change = null;
@@ -1097,7 +1106,7 @@ if (typeof jQuery === 'undefined') {
             if (change != null) {
                 var value = {};
                 value[$he.attr('name')] = $he.val();
-                value[$ud.attr('name')] = $ud.val();
+                value[$sd.attr('name')] = $sd.val();
                 change(value);
             }
         });
@@ -1111,21 +1120,21 @@ if (typeof jQuery === 'undefined') {
     TableHeadSorter.prototype.setOptions = function (options) {
         this.options = $.extend({}, this.options, options);
         var $he = this.$headerElement;
-        var $ud = this.$updownElement;
+        var $sd = this.$sdElement;
         var value = options.value;
         if (value != null) {
             $he.val(value[$he.attr('name')]);
-            var ud = value[$ud.attr('name')];
-            if (ud = 'asc') ud = 0;
-            if (ud = 'desc') ud = 1;
-            $ud.val(ud);
+            var sd = value[$sd.attr('name')];
+            if (sd = 'asc') sd = 0;
+            if (sd = 'desc') sd = 1;
+            $sd.val(sd);
         }
 
         var $th = this.$element.find('th.sort-both, th.sort-asc, th.sort-desc');
         $th.removeClass('sort-asc').removeClass('sort-desc').addClass('sort-both');
         var header = $he.val();
-        var updown = ($ud.val() == 0) ? 'asc' : 'desc';
-        $th.filter('[data-header=' + header + ']').removeClass('sort-both').addClass('sort-' + updown);
+        var sortDirection = ($sd.val() == 0) ? 'asc' : 'desc';
+        $th.filter('[data-header=' + header + ']').removeClass('sort-both').addClass('sort-' + sortDirection);
     };
 
     // Plugin 

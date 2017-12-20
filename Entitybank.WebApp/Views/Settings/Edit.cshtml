@@ -12,6 +12,8 @@
       data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
       data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
       data-bv-message="This value is not valid">
+    <input name="PasswordCrypto" type="hidden" />
+    <input name="PasswordHash" type="hidden" />
     <div class="form-group">
         <div data-plugin="errorRenderer" class="col-sm-offset-2 text-danger">
         </div>
@@ -20,9 +22,9 @@
         <label class="col-sm-2 control-label">PasswordFormat:</label>
         <div class="col-sm-4">
             <select name="PasswordFormat" class="form-control">
-                <option value="Clear">Clear</option>
-                <option value="Encrypted">Encrypted</option>
-                <option value="Hashed">Hashed</option>
+                <option value="0">Clear</option>
+                <option value="1">Hashed</option>
+                <option value="2">Encrypted</option>
             </select>
         </div>
     </div>
@@ -30,29 +32,53 @@
         <label class="col-sm-2 control-label">MaxInvalidPwdAttempts:</label>
         <div class="col-sm-4">
             <input name="MaxInvalidPasswordAttempts" class="form-control" type="text"
-                   required data-bv-notempty-message="The MaxInvalidPasswordAttempts is required" />
+                   required data-bv-notempty-message="The MaxInvalidPasswordAttempts is required and cannot be empty"
+                   pattern="^\d+$" data-bv-regexp-message="The MaxInvalidPasswordAttempts must be a non-negative number" />
         </div>
     </div>
     <div class="form-group">
         <label class="col-sm-2 control-label">PasswordAttemptWindow:</label>
         <div class="col-sm-4">
             <input name="PasswordAttemptWindow" class="form-control" type="text"
-                   required data-bv-notempty-message="The PasswordAttemptWindow is required" />
+                   required data-bv-notempty-message="The PasswordAttemptWindow is required and cannot be empty"
+                   pattern="^\d+$" data-bv-regexp-message="The PasswordAttemptWindow must be a non-negative number" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">MinRequiredPwdLength:</label>
+        <div class="col-sm-4">
+            <input name="MinRequiredPasswordLength" class="form-control" type="text"
+                   required data-bv-notempty-message="The MinRequiredPasswordLength is required and cannot be empty"
+                   pattern="^\d+$" data-bv-regexp-message="The MinRequiredPasswordLength must be a non-negative number" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">MinNonAlphaNumChars:</label>
+        <div class="col-sm-4">
+            <input name="MinRequiredNonAlphanumericCharacters" class="form-control" type="text"
+                   required data-bv-notempty-message="The MinRequiredNonAlphanumericCharacters is required and cannot be empty"
+                   pattern="^\d+$" data-bv-regexp-message="The MinRequiredNonAlphanumericCharacters must be a non-negative number" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">PwdStrengthRegularExpr:</label>
+        <div class="col-sm-4">
+            <input name="PasswordStrengthRegularExpression" class="form-control" type="text" />
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-2">
-            <input type="submit" class="btn btn-primary" value="Reset" data-redirect-url="/Admin/Settings/Index" />
-            <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
+            <input type="submit" class="btn btn-primary" value="Reset" />
+            <a href="/Admin/Settings/Index" class="btn btn-info">Return</a>
         </div>
     </div>
 </form>
 
 <br />
-<h3>Initial password settings</h3>
+<h3>Initial password</h3>
 <hr />
 
-<form id="form" class="form form-horizontal" role="form"
+<form id="init-pwd-form" class="form form-horizontal" role="form"
       data-bv-feedbackicons-validating="glyphicon glyphicon-refresh"
       data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
       data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
@@ -65,13 +91,69 @@
         <label class="col-sm-2 control-label">InitialPassword:</label>
         <div class="col-sm-4">
             <input name="InitialPassword" class="form-control" type="text"
-                   required data-bv-notempty-message="The InitialPassword is required" />
+                   required data-bv-notempty-message="The InitialPassword is required and cannot be empty"
+                   data-bv-stringlength="true" data-bv-stringlength-min="6" data-bv-stringlength-max="20"
+                   data-bv-stringlength-message="The InitialPassword must be at least 6 and not more than 20 characters long" />
         </div>
     </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-2">
-            <input type="submit" class="btn btn-primary" value="Reset" data-redirect-url="/Admin/Settings/Index" />
-            <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
+            <input type="submit" class="btn btn-primary" value="Reset" />
+            <a href="/Admin/Settings/Index" class="btn btn-info">Return</a>
         </div>
     </div>
 </form>
+@section scripts
+{
+    <script src="~/Scripts/bootstrapValidator.min.js"></script>
+    <script src="~/Scripts/moment.min.js"></script>
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $.getJSON('/Admin/Api/Membership')
+                .done(function (data, textStatus, jqXHR) {
+                    $('#form').deserializeObject(data);
+
+                    $('#form').bootstrapValidator()
+                        .on('success.form.bv', function (event) {
+                            event.preventDefault();
+                            var $form = $(event.target);
+                            var bv = $form.data('bootstrapValidator');
+                            var obj = $form.serializeObject();
+                            $.put('/Admin/Api/Membership', obj)
+                                .done(function (data, textStatus, jqXHR) {
+                                    alert("Membership settings has been reset successfully.");
+                                    var bootstrapValidator = $form.data('bootstrapValidator');
+                                    bootstrapValidator.disableSubmitButtons(false);
+                                })
+                                .fail(function (jqXHR, textStatus, errorThrown) {
+                                    $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                                });
+                        });
+                });
+
+            $.getJSON('/Admin/Api/InitPwd')
+                .done(function (data, textStatus, jqXHR) {
+                    $('#init-pwd-form').deserializeObject(data);
+
+                    $('#init-pwd-form').bootstrapValidator()
+                        .on('success.form.bv', function (event) {
+                            event.preventDefault();
+                            var $form = $(event.target);
+                            var bv = $form.data('bootstrapValidator');
+                            var obj = $form.serializeObject();
+                            $.put('/Admin/Api/InitPwd', obj)
+                                .done(function (data, textStatus, jqXHR) {
+                                    alert("Initial password has been reset successfully.");
+                                    var bootstrapValidator = $form.data('bootstrapValidator');
+                                    bootstrapValidator.disableSubmitButtons(false);
+                                })
+                                .fail(function (jqXHR, textStatus, errorThrown) {
+                                    $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                                });
+                        });
+                });
+        });
+    </script>
+}

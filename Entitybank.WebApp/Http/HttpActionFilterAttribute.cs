@@ -36,10 +36,9 @@ namespace XData.Web.Http.Filters
                 Accept = request.Headers.Accept.ToString(),
                 HttpMethod = request.Method.Method,
                 Url = request.RequestUri.AbsoluteUri,
-                UrlReferrer = request.Headers.Referrer.AbsoluteUri,
+                UrlReferrer = request.Headers.Referrer?.AbsoluteUri,
                 UserAgent = request.Headers.UserAgent.ToString(),
-                //UserHostAddress = null,
-                //UserHostName = null
+                //UserHostAddress = null
             };
 
             ThreadDataStore.RequestInfo = requestInfo;

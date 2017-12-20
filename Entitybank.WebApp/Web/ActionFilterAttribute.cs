@@ -27,8 +27,7 @@ namespace XData.Web.Filters
                 Url = request.Url.AbsoluteUri,
                 UrlReferrer = request.UrlReferrer?.AbsoluteUri,
                 UserAgent = request.UserAgent,
-                UserHostAddress = request.UserHostAddress,
-                UserHostName = request.UserHostName
+                UserHostAddress = request.UserHostAddress
             };
 
             ThreadDataStore.RequestInfo = requestInfo;

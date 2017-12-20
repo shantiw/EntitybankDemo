@@ -6,75 +6,71 @@
 <h2>User</h2>
 <hr />
 
-<div class="row">
+<form id="form" role="form" action="/Admin/Api/Users"
+      data-bv-message="This value is not valid"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
     <div class="col-sm-6">
-        <form id="form" role="form" style="width:50%"
-              data-bv-message="This value is not valid"
-              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
-              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-              data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
-            <div class="form-group">
-                <label class="control-label">Employee:</label>
-                <div class="input-group">
-                    <input type="hidden" name="EmployeeId" />
-                    <input id="employee-name" class="form-control" type="text" readonly>
-                    <span class="input-group-addon" onclick="$('#employee-name').click()">
-                        <i class="glyphicon glyphicon-option-horizontal"></i>
-                    </span>
-                </div>
+        <div class="form-group">
+            <div data-plugin="errorRenderer" class="text-danger">
             </div>
-            <div class="form-group">
-                <label class="control-label">Username:</label>
-                <input class="form-control" type="text"
-                       data_bv_notempty="true"
-                       data_bv_notempty_message="The user name is required and cannot be empty"
-                       data_bv_stringlength="true"
-                       data_bv_stringlength_min="4"
-                       data_bv_stringlength_max="8"
-                       data_bv_stringlength_message="The user name must be at least 4 and not more than 8 characters long"
-                       data_bv_username="true"
-                       data_bv_username_message="The user name must contain at least one of alphabetical characters and not contain ''"
-                       pattern="^\w+$"
-                       data_bv_regexp_message="The user name can only consist of alphabetical characters, numbers and underscore"
-                       data_bv_remote="true"
-                       data_bv_remote_url="/Admin/Users/IsUniqueUserName"
-                       data_bv_remote_message="The user name is already taken" />
-
+        </div>
+        <div class="form-group">
+            <label class="control-label">Employee:</label>
+            <div class="input-group">
+                <input type="hidden" name="EmployeeId" />
+                <input id="employee-name" class="form-control" type="text" readonly />
+                <span class="input-group-addon">
+                    <i class="glyphicon glyphicon-option-horizontal"></i>
+                </span>
             </div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input name="IsDisabled" type="checkbox" />Disabled
-                    </label>
-                </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">Username:</label>
+            <input name="UserName" class="form-control" type="text" maxlength="8"
+                   data-bv-notempty="true"
+                   data-bv-notempty-message="The user name is required and cannot be empty"
+                   data-bv-stringlength="true"
+                   data-bv-stringlength-min="4"
+                   data-bv-stringlength-max="8"
+                   data-bv-stringlength-message="The user name must be at least 4 and not more than 8 characters long"
+                   data-bv-username="true"
+                   data-bv-username-message="The user name must contain at least one of alphabetical characters and not contain ''"
+                   pattern="^\w+$"
+                   data-bv-regexp-message="The user name can only consist of alphabetical characters, numbers and underscore"
+                   data-bv-remote="true"
+                   data-bv-remote-url="/Admin/Users/IsUnique"
+                   data-bv-remote-message="The user name is already taken" />
+        </div>
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    <input name="IsDisabled" type="checkbox" />Disabled
+                </label>
             </div>
-            <div class="form-group">
-
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Create" />
-                <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
-            </div>
-        </form>
+        </div>
     </div>
     <div class="col-sm-6">
-        <form id="form" role="form">
-            <div class="form-group">
-                <label class="control-label">Grant roles:</label>
-                <ul id="roles" class="list-group">
-                    <li style="list-style:none">
-                        <div class="checkbox">
-                            <label>
-                                <input name="RoleId" type="checkbox" value="{{Id}}" />
-                                {{RoleName}}&nbsp;&nbsp;{{DisplayName}}
-                            </label>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </form>
+        <div class="form-group">
+            <label class="control-label">Grant roles:</label>
+            <ul id="roles" class="list-group">
+                <li style="list-style:none">
+                    <div class="checkbox">
+                        <label>
+                            <input name="RoleId" type="checkbox" value="{{Id}}" />
+                            {{RoleName}}&nbsp;&nbsp;{{DisplayName}}
+                        </label>
+                    </div>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
+    <div style="clear:both">
+        <input type="submit" class="btn btn-primary" value="Create" data-redirect-url="/Admin/Users/Index" />
+        <input type="button" class="btn btn-info" value="Return" onclick="javascript:history.go(-1)" />
+    </div>
+</form>
 
 @Html.Partial("_EmplyeeDialog")
 
@@ -85,6 +81,7 @@
 
 @section scripts
 {
+    <script src="~/Scripts/bootstrapValidator.min.js"></script>
     <script src="~/Scripts/moment.min.js"></script>
     <script src="~/frontend/xfront/js/xfront.js"></script>
 
@@ -98,17 +95,19 @@
 
             $('#employee-name').click(function (event) {
                 var $element = $('#employee-name');
+                var $hidden = $element.siblings().filter(':hidden');
                 $('#employee-dialog').selectDialog({
                     url: "/api?name=employee-dialog",
                     done: function (result) {
                         if (result == null) {
-                            $element.siblings().filter(':hidden').val('');
+                            $hidden.val('');
                             $element.val('');
                         }
                         else {
-                            $element.siblings().filter(':hidden').val(result["Id"]);
+                            $hidden.val(result["Id"]);
                             $element.val(result["Name"]);
                         }
+                        $hidden.change();
                     }
                 });
             });
@@ -117,6 +116,33 @@
                 $('#employee-name').click();
             });
 
+            $('#form').bootstrapValidator({
+                excluded: [":disabled"],
+                fields: {
+                    EmployeeId: {
+                        trigger: "change",
+                        validators: {
+                            notEmpty: {
+                                message: 'The employee is required'
+                            }
+                        }
+                    }
+                }
+            }).on('success.form.bv', function (event) {
+                event.preventDefault();
+                var $form = $(event.target);
+                var bv = $form.data('bootstrapValidator');
+                var obj = $form.serializeArray();
+                var action = $form.attr('action');
+                $.post(action, obj)
+                    .done(function (data, textStatus, jqXHR) {
+                        var redirect = bv.$submitButton.attr("data-redirect-url") + window.location.search;
+                        window.location.href = redirect;
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                    });
+            });
         });
     </script>
 }

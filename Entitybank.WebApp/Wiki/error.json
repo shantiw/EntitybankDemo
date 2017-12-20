@@ -1,0 +1,12 @@
+﻿
+
+[
+  {
+    "MemberNames": [ "Path1", "Path2" ],
+    "ErrorMessage": "Validation1"
+  },
+  {
+    "MemberNames": [ "Path1", "Path2" ],
+    "ErrorMessage": "Validation2"
+  }
+]

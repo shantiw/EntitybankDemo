@@ -12,7 +12,7 @@
         <label class="col-sm-2 control-label">Role Name:</label>
         <div class="col-sm-4">
             <input name="RoleName" class="form-control" type="text"
-                   required data-bv-notempty-message="The role name is required"
+                   required data-bv-notempty-message="The role name is required and cannot be empty"
                    pattern="^\w+$" data-bv-regexp-message="The role name can only consist of alphabetical characters, numbers and underscore"
                    data-bv-remote data-bv-remote-url="/Admin/Roles/IsUnique" data-bv-remote-message="The role name is already taken" />
         </div>

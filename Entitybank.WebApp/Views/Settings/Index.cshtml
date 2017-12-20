@@ -7,28 +7,54 @@
 <h3>Membership settings</h3>
 <hr />
 
-<div class="row">
-    <div class="col-sm-2">
-        <label class="pull-right">PasswordFormat:</label>
+<div id="membership">
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">PasswordFormat:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{stringfyPasswordFormat(PasswordFormat)}}</p>
+        </div>
     </div>
-    <div class="col-sm-4">
-        <p>{{PasswordFormat}}</p>
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">MaxInvalidPwdAttempts:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{MaxInvalidPasswordAttempts}}</p>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-2">
-        <label class="pull-right">MaxInvalidPwdAttempts:</label>
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">PasswordAttemptWindow:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{PasswordAttemptWindow}}</p>
+        </div>
     </div>
-    <div class="col-sm-4">
-        <p>{{MaxInvalidPasswordAttempts}}</p>
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">MinRequiredPwdLength:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{MinRequiredPasswordLength}}</p>
+        </div>
     </div>
-</div>
-<div class="row">
-    <div class="col-sm-2">
-        <label class="pull-right">PasswordAttemptWindow:</label>
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">MinNonAlphaNumChars:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{MinRequiredNonAlphanumericCharacters}}</p>
+        </div>
     </div>
-    <div class="col-sm-4">
-        <p>{{PasswordAttemptWindow}}</p>
+    <div class="row">
+        <div class="col-sm-2">
+            <label class="pull-right">PwdStrengthRegularExpr:</label>
+        </div>
+        <div class="col-sm-4">
+            <p>{{PasswordStrengthRegularExpression}}</p>
+        </div>
     </div>
 </div>
 
@@ -36,7 +62,7 @@
 <h3>Initial password settings</h3>
 <hr />
 
-<div class="row">
+<div id="init-pwd" class="row">
     <div class="col-sm-2">
         <label class="pull-right">InitialPassword:</label>
     </div>
@@ -47,3 +73,28 @@
 
 <hr />
 <a class="btn btn-primary" href="/Admin/Settings/Edit">Edit settings</a>
+
+@section scripts
+{
+    <script src="~/frontend/xfront/js/xfront.js"></script>
+
+    <script>
+        var stringfyPasswordFormat = function (value) {
+            switch (value) {
+                case 0: return 'Clear';
+                case 1: return 'Hashed';
+                case 2: return 'Encrypted';
+            }
+        }
+
+        $(document).ready(function () {
+            $.getJSON('/Admin/Api/Membership', {}, function (data, textStatus, jqXHR) {
+                $('#membership').renderer(data);
+            });
+
+            $.getJSON('/Admin/Api/InitPwd', {}, function (data, textStatus, jqXHR) {
+                $('#init-pwd').renderer(data);
+            });
+        });
+    </script>
+}

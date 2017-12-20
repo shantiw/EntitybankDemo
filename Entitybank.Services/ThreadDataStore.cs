@@ -16,7 +16,6 @@ namespace XData.Data.Services
         public string UrlReferrer { get; set; }
         public string UserAgent { get; set; }
         public string UserHostAddress { get; set; }
-        public string UserHostName { get; set; }
         public string Accept { get; set; }
     }
 
@@ -38,7 +37,6 @@ namespace XData.Data.Services
             securityEntry.SetElementValue("UrlReferrer", requestInfo.UrlReferrer);
             securityEntry.SetElementValue("UserAgent", requestInfo.UserAgent);
             securityEntry.SetElementValue("UserHostAddress", requestInfo.UserHostAddress);
-            securityEntry.SetElementValue("UserHostAddress", requestInfo.UserHostName);
             securityEntry.SetElementValue("Accept", requestInfo.Accept);
             XElement user = GetCurrentUser(querier);
             if (user != null)

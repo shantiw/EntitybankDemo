@@ -9,7 +9,7 @@ namespace XData.Web.Models
 {
     public static class WebSecurity
     {
-        private static AccountService AccountService = new AccountService();
+        private static AccountService AccountService { get => new AccountService(); }
 
         public static string Name => AccountService.GetLoginedUser(Thread.CurrentPrincipal.Identity.Name).Element("Name").Value;
 
@@ -30,6 +30,17 @@ namespace XData.Web.Models
         {
             AccountService.ChangePassword(password, newPassword);
         }
+
+        public static bool IsInRole(string role)
+        {
+            if (Thread.CurrentPrincipal.Identity.IsAuthenticated)
+            {
+                return AccountService.IsInRole(Thread.CurrentPrincipal.Identity.Name, role);
+            }
+
+            return false;
+        }
+
 
     }
 }

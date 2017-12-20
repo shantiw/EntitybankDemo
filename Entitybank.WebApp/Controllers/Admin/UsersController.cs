@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
+using XData.Web.Models;
 
 namespace XData.Web.Controllers
 {
@@ -38,6 +39,17 @@ namespace XData.Web.Controllers
         public ActionResult Details(int id)
         {
             return View();
+        }
+
+        [Route("IsUnique")]
+        public ActionResult IsUnique()
+        {
+            bool isUnique = false;
+            string userName = Request.QueryString["UserName"];
+
+            isUnique = new WebModel().IsUnique("User", "LoweredUserName", userName.ToLower(), Request);
+            var obj = new { valid = isUnique };
+            return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
 

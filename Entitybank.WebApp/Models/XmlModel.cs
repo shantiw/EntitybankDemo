@@ -33,8 +33,8 @@ namespace XData.Web.Models
 
         public HttpResponseMessage Get(HttpRequestMessage request)
         {
-            IEnumerable<KeyValuePair<string, string>> nameValues = request.GetNameValues();
-            XElement element = new XmlService(nameValues).Get();
+            IEnumerable<KeyValuePair<string, string>> keyValues = request.GetQueryNameValuePairs();
+            XElement element = new XmlService(keyValues).Get();
 
             return CreateHttpResponseMessage(element, request);
         }

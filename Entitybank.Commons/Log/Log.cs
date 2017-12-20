@@ -21,6 +21,16 @@ namespace XData.Data.Diagnostics
             Logger = LogManager.GetLogger("logger");
         }
 
+        public static void Debug(object message)
+        {
+            Logger.Debug(message);
+        }
+
+        public static void Debug(object message, Exception exception)
+        {
+            Logger.Debug(message, exception);
+        }
+
         public static void Error(object message)
         {
             Logger.Error(message);
@@ -29,6 +39,26 @@ namespace XData.Data.Diagnostics
         public static void Error(object message, Exception exception)
         {
             Logger.Error(message, exception);
+        }
+
+        public static void Fatal(object message)
+        {
+            Logger.Fatal(message);
+        }
+
+        public static void Fatal(object message, Exception exception)
+        {
+            Logger.Fatal(message, exception);
+        }
+
+        public static void Info(object message)
+        {
+            Logger.Info(message);
+        }
+
+        public static void Info(object message, Exception exception)
+        {
+            Logger.Info(message, exception);
         }
 
 

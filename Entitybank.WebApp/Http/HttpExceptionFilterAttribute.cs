@@ -49,12 +49,6 @@ namespace XData.Web.Http.Filters
                 }
             }
 
-            //List<ValidationResult> validationResults1 = new List<ValidationResult>();
-            //validationResults1.Add(new ValidationResult("Validation1", new string[] { "Path1", "Path2" }));
-            //validationResults1.Add(new ValidationResult("Validation2", new string[] { "Path1", "Path2" }));
-            //ObjectContent content1 = new ObjectContent<IEnumerable<ValidationResult>>(validationResults1, new JsonMediaTypeFormatter(), "application/json");
-            //actionExecutedContext.Response = new HttpResponseMessage(HttpStatusCode.InternalServerError) { Content = content1 };
-
             base.OnException(actionExecutedContext);
         }
 

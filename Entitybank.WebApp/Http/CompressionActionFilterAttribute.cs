@@ -16,14 +16,20 @@ namespace XData.Web.Http.Filters
     {
         public override void OnActionExecuted(HttpActionExecutedContext actionExecutedContext)
         {
-            Compress(actionExecutedContext.Response);
+            if (actionExecutedContext.Exception == null)
+            {
+                Compress(actionExecutedContext.Response);
+            }
 
             base.OnActionExecuted(actionExecutedContext);
         }
 
         public override Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
         {
-            Compress(actionExecutedContext.Response);
+            if (actionExecutedContext.Exception == null)
+            {
+                Compress(actionExecutedContext.Response);
+            }
 
             return base.OnActionExecutedAsync(actionExecutedContext, cancellationToken);
         }

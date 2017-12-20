@@ -43,46 +43,53 @@
     <div class="col-sm-6">
         <h3>Reset password</h3>
         <hr />
-        <form id="pwd-form" role="form" action="/Admin/Api/Users" style="width:50%"
+        <form id="pwd-form" role="form" action="/Admin/Api/Users/Password" style="width:50%"
               data-bv-message="This value is not valid"
               data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
               data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
               data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+            <input name="Id" type="hidden" />
             <div class="form-group">
-                <label for="name">New password</label>
+                <label for="Password">New password</label>
                 <input name="Password" class="form-control" type="password"
-                       required data-bv-notempty-message="The password is required" />
+                       required data-bv-notempty-message="The new password is required and cannot be empty"
+                       data-bv-stringlength="true" data-bv-stringlength-min="6" data-bv-stringlength-max="20"
+                       data-bv-stringlength-message="The new password must be at least 6 and not more than 20 characters long" />
+            </div>
+            <div class="form-group">
+                <div data-plugin="errorRenderer" class="text-danger">
+                </div>
             </div>
             <button type="submit" class="btn btn-primary">Reset password</button>
-            <input type="button" class="btn btn-info" value="Return" />
+            <a href="/Admin/Users/Index" class="btn btn-info">Return</a>
         </form>
-        <br />
-        <h3>Reset username</h3>
-        <hr />
-        <form id="username-form" role="form" action="/Admin/Api/Users" style="width:50%"
-              data-bv-message="This value is not valid"
-              data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
-              data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
-              data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
-            <div class="form-group">
-                <label for="name">New username</label>
-                <input name="Username" class="form-control" type="text"
-                       required data-bv-notempty-message="The username is required" />
-            </div>
-            <button type="submit" class="btn btn-primary">Reset username</button>
-            <input type="button" class="btn btn-info" value="Return" data-redirect-url="/Admin/Users/Index" />
-        </form>
-        <br />
-        <h3>Enable/Disable</h3>
-        <hr />
-        <br />
-        <h3>Unlock</h3>
-        <hr />
+        <div id="enable-disable">
+            <br />
+            <h3>Enable/Disable</h3>
+            <hr />
+            <form id="enable-disable-form" role="form" action="/Admin/Api/Users/Status" style="width:50%">
+                <input name="Id" type="hidden" />
+                <input name="IsDisabled" type="hidden" />
+                <button type="submit" class="btn btn-primary">Enable/Disable</button>
+                <a href="/Admin/Users/Index" class="btn btn-info">Return</a>
+            </form>
+        </div>
+        <div id="unlock" class="invisible">
+            <br />
+            <h3>Unlock</h3>
+            <hr />
+            <form id="unlock-form" role="form" action="/Admin/Api/Users/LockoutStatus" style="width:50%">
+                <input name="Id" type="hidden" />
+                <button type="submit" class="btn btn-primary">Unlock</button>
+                <a href="/Admin/Users/Index" class="btn btn-info">Return</a>
+            </form>
+        </div>
     </div>
     <div class="col-sm-6">
         <h3>Grant roles</h3>
         <hr />
-        <form id="roles-form" role="form" action="/Admin/Api/Users">
+        <form id="roles-form" role="form" action="/Admin/Api/Users/Roles">
+            <input name="Id" type="hidden" />
             <div class="form-group">
                 <ul id="roles" class="list-group">
                     <li style="list-style:none">
@@ -96,7 +103,7 @@
                 </ul>
             </div>
             <input class="btn btn-primary" type="submit" value="Grant roles" />
-            <input class="btn btn-info" type="button" value="Return" data-redirect-url="/Admin/Users/Index" />
+            <a href="/Admin/Users/Index" class="btn btn-info">Return</a>
         </form>
     </div>
 </div>
@@ -109,8 +116,30 @@
 
     <script>
         $(document).ready(function () {
+            var set_enable_disable = function (isDisabled) {
+                var text = isDisabled ? 'Disable' : 'Enable';
+                $('#enable-disable').find('h3').html(text);
+                var $form = $('#enable-disable').find('form');
+                $form.find('[name=IsDisabled]').val(isDisabled);
+                $form.find(':submit').html(text);
+            };
+
+            var set_unlock = function (isLockedOut) {
+                if (isLockedOut) {
+                    $('#unlock').removeClass('invisible');
+                }
+                else {
+                    $('#unlock').add('invisible');
+                }
+            };
+
             $.getJSON('/api', {}, function (data, textStatus, jqXHR) {
                 $('#details').renderer(data);
+
+                var item = data[0];
+                $('form').find('[name=Id]').val(item.Id);
+                set_enable_disable(!item.IsDisabled);
+                set_unlock(item.IsLockedOut);
             });
 
             $.getJSON('/api?name=allRoles', {}, function (data, textStatus, jqXHR) {
@@ -130,30 +159,44 @@
                     var action = $form.attr('action');
                     $.put(action, obj)
                         .done(function (data, textStatus, jqXHR) {
-                            alert('Password reseted successfully.');
+                            alert('Password has been reset successfully.');
                         })
                         .fail(function (jqXHR, textStatus, errorThrown) {
                             $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
                         });
-
                 });
 
-            $('#username-form').bootstrapValidator()
-                .on('success.form.bv', function (event) {
-                    event.preventDefault();
-                    var $form = $(event.target);
-                    var bv = $form.data('bootstrapValidator');
-                    var obj = $form.serializeObject();
-                    var action = $form.attr('action');
-                    $.put(action, obj)
-                        .done(function (data, textStatus, jqXHR) {
-                            alert('Username reseted successfully.');
-                        })
-                        .fail(function (jqXHR, textStatus, errorThrown) {
-                            $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
-                        });
+            $('#enable-disable-form :submit').click(function (event) {
+                event.preventDefault();
+                var $form = $("#enable-disable-form");
+                var obj = $form.serializeObject();
+                var action = $form.attr('action');
+                $.put(action, obj)
+                    .done(function (data, textStatus, jqXHR) {
+                        var isDisabled = obj.IsDisabled == 'true';
+                        var text = isDisabled ? 'disabled' : 'enabled';
+                        alert('The user has been ' + text + '.');
+                        set_enable_disable(!isDisabled);
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        alert('Error:' + errorThrown);
+                    });
+            });
 
-                });
+            $('#unlock-form :submit').click(function (event) {
+                event.preventDefault();
+                var $form = $("#unlock-form");
+                var obj = $form.serializeObject();
+                var action = $form.attr('action');
+                $.put(action, obj)
+                    .done(function (data, textStatus, jqXHR) {
+                        alert('The user has been unlocked.');
+                        set_unlock(false);
+                    })
+                    .fail(function (jqXHR, textStatus, errorThrown) {
+                        alert('Error:' + errorThrown);
+                    });
+            });
 
             $('#roles-form :submit').click(function (event) {
                 event.preventDefault();
@@ -162,10 +205,10 @@
                 var action = $form.attr('action');
                 $.put(action, obj)
                     .done(function (data, textStatus, jqXHR) {
-                        alert('Roles reseted successfully.');
+                        alert('The user in roles has been reset successfully.');
                     })
                     .fail(function (jqXHR, textStatus, errorThrown) {
-                        $form.find('[data-plugin=errorRenderer]').errorRenderer(jqXHR.responseJSON);
+                        alert('Error:' + errorThrown);
                     });
             });
         });

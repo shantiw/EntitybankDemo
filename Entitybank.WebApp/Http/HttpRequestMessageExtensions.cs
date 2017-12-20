@@ -33,46 +33,6 @@ namespace System.Net.Http
             return Encoding.UTF8;
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> GetNameValues(this HttpRequestMessage request)
-        {
-            IEnumerable<KeyValuePair<string, string>> nameValues = request.GetQueryNameValuePairs();
-            if (request.Headers.Referrer == null) return nameValues;
-
-            string referrer = request.Headers.Referrer.AbsolutePath;
-            if (string.IsNullOrWhiteSpace(referrer)) return nameValues;
-
-            if (nameValues.Any(p => p.Key == "key")) return nameValues;
-
-            string[] rArray = referrer.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-            string last = rArray.Last().ToLower();
-
-            string key = null;
-            string id = null;
-            if (last == "index")
-            {
-                key = referrer.Substring(0, referrer.Length - last.Length - 1);
-            }
-            else if (last == "create")
-            {
-                key = referrer;
-            }
-            else if (rArray.Length > 1)
-            {
-                string prev = rArray[rArray.Length - 2];
-                if (prev == "Edit" || prev == "Delete" || prev == "Details")
-                {
-                    id = last;
-                    key = referrer.Substring(0, referrer.Length - last.Length) + "{id}";
-                }
-            }
-
-            List<KeyValuePair<string, string>> list = new List<KeyValuePair<string, string>>(nameValues);
-            if (key != null) list.Add(new KeyValuePair<string, string>("key", key));
-            if (id != null) list.Add(new KeyValuePair<string, string>("id", id));
-
-            return list;
-        }
-
 
     }
 }
