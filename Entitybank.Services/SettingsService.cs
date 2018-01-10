@@ -44,15 +44,9 @@ namespace XData.Data.Services
         public SettingsService(string name)
         {
             Name = name;
-            Schema = GetSchema(name, new List<KeyValuePair<string, string>>());
+            Schema = new SchemaProvider(name).GetSchema();
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
             Modifier = XmlModifier.Create(name, Schema);
-        }
-
-        protected static XElement GetSchema(string name, IEnumerable<KeyValuePair<string, string>> deltaKey)
-        {
-            SchemaProvider schemaProvider = new SchemaProvider(name);
-            return schemaProvider.GetSchema(deltaKey);
         }
 
         public MembershipSettings GetMembershipSettings()

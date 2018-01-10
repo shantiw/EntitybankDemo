@@ -19,7 +19,7 @@ namespace XData.Windows.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public FrameworkElement View { get; set; }
+        public virtual DependencyObject View { get; set; }
 
         protected MessageBoxResult ShowMessage(string messageBoxText)
         {

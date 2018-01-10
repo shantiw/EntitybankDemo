@@ -11,7 +11,7 @@ namespace XData.Web.Models
     {
         private static AccountService AccountService { get => new AccountService(); }
 
-        public static string Name => AccountService.GetLoginedUser(Thread.CurrentPrincipal.Identity.Name).Element("Name").Value;
+        public static string Name => AccountService.GetLoginedUser(Thread.CurrentPrincipal.Identity.Name).Element("element").Elements().First().Elements().First().Element("Name").Value;
 
         public static bool Login(LoginModel model, out string errorMessage)
         {

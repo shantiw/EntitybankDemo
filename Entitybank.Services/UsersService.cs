@@ -26,7 +26,7 @@ namespace XData.Data.Services
         public UsersService(string name)
         {
             Name = name;
-            Schema = GetSchema(name, new List<KeyValuePair<string, string>>());
+            Schema = new SchemaProvider(name).GetSchema();
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
             Modifier = XmlModifier.Create(name, Schema);
         }
@@ -147,12 +147,6 @@ namespace XData.Data.Services
             Modifier.AppendCreate(xSecurityEntry);
             Modifier.Persist();
             Modifier.Clear();
-        }
-
-        protected static XElement GetSchema(string name, IEnumerable<KeyValuePair<string, string>> deltaKey)
-        {
-            SchemaProvider schemaProvider = new SchemaProvider(name);
-            return schemaProvider.GetSchema(deltaKey);
         }
 
 

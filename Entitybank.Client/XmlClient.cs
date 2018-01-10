@@ -36,7 +36,7 @@ namespace XData.Http.Client
             errorMessage = result.GetErrorMessage();
             if (errorMessage == null)
             {
-                XElement user = result;
+                XElement user = result.Element("element").Elements().First().Elements().First();
                 return user;
             }
 

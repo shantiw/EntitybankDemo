@@ -38,8 +38,8 @@ namespace XData.Web.Http.Filters
                 Url = request.RequestUri.AbsoluteUri,
                 UrlReferrer = request.Headers.Referrer?.AbsoluteUri,
                 UserAgent = request.Headers.UserAgent.ToString(),
-                //UserHostAddress = null
-            };
+                UserHostAddress = ((System.Web.HttpContextWrapper)request.Properties["MS_HttpContext"]).Request.UserHostAddress
+        };
 
             ThreadDataStore.RequestInfo = requestInfo;
         }

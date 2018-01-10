@@ -223,13 +223,13 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="entitybank\global.config" />
-    <Content Include="entitybank\my\delta\delta1.config" />
-    <Content Include="entitybank\my\delta\delta2.config" />
+    <Content Include="entitybank\my\deltas\delta1.config" />
+    <Content Include="entitybank\my\deltas\delta2.config" />
     <Content Include="entitybank\my\instance.config" />
     <Content Include="entitybank\my\mapping.config" />
     <Content Include="entitybank\my\revise.config" />
-    <Content Include="entitybank\ora\delta\delta1.config" />
-    <Content Include="entitybank\ora\delta\delta2.config" />
+    <Content Include="entitybank\ora\deltas\delta1.config" />
+    <Content Include="entitybank\ora\deltas\delta2.config" />
     <Content Include="entitybank\ora\instance.config" />
     <Content Include="entitybank\ora\mapping.config" />
     <Content Include="entitybank\ora\revise.config" />
@@ -392,7 +392,10 @@
     <Content Include="Views\Account\Edit.cshtml" />
     <None Include="Wiki\revise.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="entitybank\my\datasources\" />
+    <Folder Include="entitybank\ora\datasources\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

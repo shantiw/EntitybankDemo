@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using XData.Data.Diagnostics;
-using XData.Http.Client;
+using XData.Client.Models;
 using XData.Windows.Interactivity;
 using XData.Windows.ViewModels;
 using XData.Windows.Views;
 
-namespace XData.Windows
+namespace XData.Windows.Client
 {
     public class App : Application
     {

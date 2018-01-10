@@ -28,7 +28,7 @@ namespace XData.Data.Services
         public AccountService(string name)
         {
             Name = name;
-            Schema = GetSchema(name, new List<KeyValuePair<string, string>>());
+            Schema = new SchemaProvider(name).GetSchema();
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
             Modifier = XmlModifier.Create(name, Schema);
         }
@@ -41,8 +41,7 @@ namespace XData.Data.Services
                 new KeyValuePair<string, string>("UserName", userName)
             };
 
-            XElement result = new XmlService(Name, keyValues).Get();
-            return result.Element("element").Elements().First().Elements().First();
+            return new XmlService(Name, keyValues).Get();
         }
 
         public bool Login(string userName, string password, out string errorMessage)
@@ -80,7 +79,9 @@ namespace XData.Data.Services
                     }
                     xSecurityEntry.SetElementValue("UserId", xUser.Element("Id").Value);
                     xSecurityEntry.SetElementValue("CreatedUserId", xUser.Element("Id").Value);
-                    xSecurityEntry.SetElementValue("CreatorName", GetLoginedUser(userName).Element("Name").Value);
+
+                    XElement xLoginedUser = GetLoginedUser(userName).Element("element").Elements().First().Elements().First();
+                    xSecurityEntry.SetElementValue("CreatorName", xLoginedUser.Element("Name").Value);
                 }
                 else
                 {
@@ -256,12 +257,6 @@ namespace XData.Data.Services
             IEnumerable<XElement> elements = ODataQuerier.GetCollection("User", null, "LoweredUserName eq @p1", null,
                 new Dictionary<string, object>() { { "@p1", userName.ToLower() } });
             return elements.FirstOrDefault();
-        }
-
-        protected static XElement GetSchema(string name, IEnumerable<KeyValuePair<string, string>> deltaKey)
-        {
-            SchemaProvider schemaProvider = new SchemaProvider(name);
-            return schemaProvider.GetSchema(deltaKey);
         }
 
 

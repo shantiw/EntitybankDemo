@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Xml.Linq;
-using XData.Http.Client;
+using XData.Client.Models;
 using XData.Windows.Views;
 
 namespace XData.Windows.ViewModels
@@ -51,7 +51,8 @@ namespace XData.Windows.ViewModels
 
             ExitCommand = new DelegateCommand((_) =>
             {
-                Application.Current.MainWindow.Close();
+                //Application.Current.MainWindow.Close();
+				Application.Current.Shutdown();
             });
 
             EmployeesCommand = new DelegateCommand((_) =>

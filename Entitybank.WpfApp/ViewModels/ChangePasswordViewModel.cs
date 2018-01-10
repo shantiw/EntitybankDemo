@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using XData.Http.Client;
+using XData.Client.Models;
 
 namespace XData.Windows.ViewModels
 {

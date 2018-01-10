@@ -10,7 +10,6 @@
         Title="Login" Height="200" Width="400" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid Margin="20">
         <Grid.RowDefinitions>
-            <RowDefinition />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -20,17 +19,17 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         
-        <Label Grid.Row="1" Content="User(_U):" HorizontalAlignment="Right" Margin="10" Target="{Binding ElementName=UserTextBox}"/>
-        <TextBox x:Name="UserTextBox" Grid.Row="1" Grid.Column="1" Margin="10"  VerticalContentAlignment="Center" TabIndex="0" 
+        <Label Content="User(_U):" HorizontalAlignment="Right" Margin="10" Target="{Binding ElementName=UserTextBox}"/>
+        <TextBox x:Name="UserTextBox" Grid.Column="1" Margin="10"  VerticalContentAlignment="Center" TabIndex="0" 
                  Text="{Binding UserName}" />
         
-        <Label Grid.Row="2" Content="Password(_P):" HorizontalAlignment="Right" Margin="10" Target="{Binding ElementName=PasswordBox}"/>
-        <PasswordBox x:Name="PasswordBox" Grid.Row="2" Grid.Column="1" Margin="10" VerticalContentAlignment="Center" TabIndex="1"
+        <Label Grid.Row="1" Content="Password(_P):" HorizontalAlignment="Right" Margin="10" Target="{Binding ElementName=PasswordBox}"/>
+        <PasswordBox x:Name="PasswordBox" Grid.Row="1" Grid.Column="1" Margin="10" VerticalContentAlignment="Center" TabIndex="1"
                      cs:PasswordBoxAttachedProperties.Password="{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-        
-        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="Login" Padding="5" Margin="0,0,10,0" IsDefault="True" TabIndex="2" Command="{Binding LoginCommand}" />
-            <Button Content="Exit" Padding="5" Margin="0,0,10,0" TabIndex="3" Command="{Binding ExitCommand}" />
+
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Login" Padding="5" MinWidth="64" Margin="0,0,10,0" IsDefault="True" TabIndex="2" Command="{Binding LoginCommand}" />
+            <Button Content="Exit" Padding="5" MinWidth="64" Margin="0,0,10,0" TabIndex="3" Command="{Binding ExitCommand}" />
         </StackPanel>
     </Grid>
 </Window>
