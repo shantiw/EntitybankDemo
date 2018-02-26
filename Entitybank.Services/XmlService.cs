@@ -60,8 +60,8 @@ namespace XData.Data.Services
                 {
                     xCollection = ODataQuerier.GetPagingCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Skip, ds.Top, ds.Expands, ds.Parameters, out xsd);
                 }
-                string collection = GetCollection(Schema, ds.Entity);
-                XElement element = new XElement(collection, xCollection);
+                string collectionName = GetCollectionName(Schema, ds.Entity);
+                XElement element = new XElement(collectionName, xCollection);
                 element.SetAttributeValue(XNamespace.Xmlns + "i", XSI);
 
                 int count = ODataQuerier.Count(ds.Entity, ds.Filter, ds.Parameters);
@@ -82,7 +82,7 @@ namespace XData.Data.Services
                 {
                     xCollection = ODataQuerier.GetCollection(ds.Entity, ds.Select, ds.Filter, ds.Orderby, ds.Expands, ds.Parameters, out xsd);
                 }
-                string collection = GetCollection(Schema, ds.Entity);
+                string collection = GetCollectionName(Schema, ds.Entity);
                 XElement element = new XElement(collection, xCollection);
                 element.SetAttributeValue(XNamespace.Xmlns + "i", XSI);
 
@@ -105,7 +105,7 @@ namespace XData.Data.Services
             throw new NotSupportedException(dataSource.GetType().ToString());
         }
 
-        protected static string GetCollection(XElement schema, string entity)
+        protected static string GetCollectionName(XElement schema, string entity)
         {
             XElement entitySchema = schema.Elements(SchemaVocab.Entity).FirstOrDefault(x => x.Attribute(SchemaVocab.Name).Value == entity);
             return entitySchema.Attribute(SchemaVocab.Collection).Value;

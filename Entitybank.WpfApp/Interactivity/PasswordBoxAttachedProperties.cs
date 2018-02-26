@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Interactivity;
 
 namespace XData.Windows.Interactivity
 {
@@ -13,19 +14,14 @@ namespace XData.Windows.Interactivity
     {
         public static readonly DependencyProperty PasswordProperty = DependencyProperty.RegisterAttached("Password", typeof(string),
             typeof(PasswordBoxAttachedProperties),
-            new UIPropertyMetadata(string.Empty, // replace null with string.Empty
-                OnPasswordPropertyChanged));
+            new UIPropertyMetadata(string.Empty, OnPasswordPropertyChanged));
 
-        // upate the passwordBox when the buffer changed
         private static void OnPasswordPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            var passwordBox = d as PasswordBox;
-            passwordBox.PasswordChanged -= PasswordChanged;
-            if (passwordBox != null)
+            if (d is PasswordBox passwordBox)
             {
                 passwordBox.Password = e.NewValue == null ? string.Empty : e.NewValue.ToString();
             }
-            passwordBox.PasswordChanged += PasswordChanged;
         }
 
         public static string GetPassword(DependencyObject obj)
@@ -37,22 +33,42 @@ namespace XData.Windows.Interactivity
         {
             obj.SetValue(PasswordProperty, value);
         }
+    }
 
-        // update the buffer when the passwordBox changed
-        private static void PasswordChanged(object sender, RoutedEventArgs e)
+    public class PasswordBoxBehavior : Behavior<PasswordBox>
+    {
+        protected override void OnAttached()
         {
-            PasswordBox passwordBox = (PasswordBox)sender;
-            if (GetPassword(passwordBox) != passwordBox.Password)
+            base.OnAttached();
+
+            AssociatedObject.PasswordChanged += OnPasswordChanged;
+        }
+
+        private static void OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            PasswordBox passwordBox = sender as PasswordBox;
+
+            string password = PasswordBoxAttachedProperties.GetPassword(passwordBox);
+
+            if (passwordBox.Password != password)
             {
-                SetPassword(passwordBox, passwordBox.Password);
+                PasswordBoxAttachedProperties.SetPassword(passwordBox, passwordBox.Password ?? string.Empty);
+                SetPasswordBoxSelection(passwordBox, passwordBox.Password.Length + 1, 0);
             }
-            SetPasswordBoxSelection(passwordBox, passwordBox.Password.Length + 1, 0);
         }
 
         private static void SetPasswordBoxSelection(PasswordBox passwordBox, int start, int length)
         {
-            var select = passwordBox.GetType().GetMethod("Select", BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo select = passwordBox.GetType().GetMethod("Select", BindingFlags.Instance | BindingFlags.NonPublic);
             select.Invoke(passwordBox, new object[] { start, length });
         }
+
+        protected override void OnDetaching()
+        {
+            AssociatedObject.PasswordChanged -= OnPasswordChanged;
+
+            base.OnDetaching();
+        }
     }
+
 }
