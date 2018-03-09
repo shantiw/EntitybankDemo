@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Entitybank, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Entitybank.1.0.1\lib\net461\Entitybank.dll</HintPath>
+    </Reference>
     <Reference Include="Evaluator">
       <HintPath>..\Evaluator.dll</HintPath>
     </Reference>
@@ -65,14 +68,13 @@
     <Compile Include="XmlService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\fw-eb\Entitybank\Entitybank.csproj">
-      <Project>{f2189fb8-6e73-4fb6-a88a-d294d6468982}</Project>
-      <Name>Entitybank</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Entitybank.Commons\Entitybank.Commons.csproj">
       <Project>{0e7dfb01-2f5b-4507-9ad0-64c4afd1bd9e}</Project>
       <Name>Entitybank.Commons</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

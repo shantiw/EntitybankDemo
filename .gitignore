@@ -20,3 +20,8 @@
 
 /Entitybank.WpfApp/obj
 /Entitybank.WpfApp/bin
+
+/Entitybank.WebApp.dev.sln
+/Entitybank.Services/Entitybank.Services.dev.csproj
+/Entitybank.WebApp/Entitybank.WebApp.dev.csproj
+
