@@ -10,13 +10,14 @@ using XData.Data.Modification;
 using XData.Data.Schema;
 using System.Xml.Linq;
 using System.Dynamic;
+using XData.Data.Objects;
 
 namespace XData.Data.Services
 {
     // name: ConnectionStringName
     public partial class JsonService : DataService
     {
-        public DynDatabase Database { get; private set; }
+        public Database<dynamic> Database { get; private set; }
         public DynModifier Modifier { get; private set; }
 
         protected ODataQuerier<string> ODataQuerier;

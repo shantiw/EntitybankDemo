@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using XData.Data.Objects;
 using XData.Data.OData;
 using XData.Data.Schema;
 using XData.Data.Xml;
@@ -13,7 +14,7 @@ namespace XData.Data.Services
 {
     public partial class XmlService : DataService
     {
-        public XmlDatabase Database { get; private set; }
+        public Database<XElement> Database { get; private set; }
         public XmlModifier Modifier { get; private set; }
 
         protected ODataQuerier<XElement> ODataQuerier;
