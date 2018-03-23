@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using XData.Data.Modification;
 using XData.Data.Objects;
 using XData.Data.OData;
 using XData.Data.Xml;
@@ -16,7 +17,7 @@ namespace XData.Data.Services
         protected readonly string Name;
         protected readonly XElement Schema;
         protected ODataQuerier<XElement> ODataQuerier;
-        protected XmlModifier Modifier;
+        protected Modifier<XElement> Modifier;
 
         public UsersService()
             : this(ConfigurationManager.ConnectionStrings[0].Name)
@@ -28,7 +29,7 @@ namespace XData.Data.Services
             Name = name;
             Schema = new SchemaProvider(name).GetSchema();
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
-            Modifier = XmlModifier.Create(name, Schema);
+            Modifier = XmlModifierFactory.Create(name, Schema);
         }
 
         public void Create(int employeeId, string userName, bool isDisabled, IEnumerable<int> roleIds)

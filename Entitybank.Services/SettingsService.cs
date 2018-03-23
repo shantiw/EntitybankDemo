@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using XData.Data.Objects;
 using XData.Data.OData;
 using XData.Data.Xml;
+using XData.Data.Modification;
 
 namespace XData.Data.Services
 {
@@ -34,7 +35,7 @@ namespace XData.Data.Services
         protected readonly string Name;
         protected readonly XElement Schema;
         protected ODataQuerier<XElement> ODataQuerier;
-        protected XmlModifier Modifier;
+        protected Modifier<XElement> Modifier;
 
         public SettingsService()
             : this(ConfigurationManager.ConnectionStrings[0].Name)
@@ -46,7 +47,7 @@ namespace XData.Data.Services
             Name = name;
             Schema = new SchemaProvider(name).GetSchema();
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
-            Modifier = XmlModifier.Create(name, Schema);
+            Modifier = XmlModifierFactory.Create(name, Schema);
         }
 
         public MembershipSettings GetMembershipSettings()

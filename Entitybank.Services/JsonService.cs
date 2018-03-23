@@ -18,7 +18,7 @@ namespace XData.Data.Services
     public partial class JsonService : DataService
     {
         public Database<dynamic> Database { get; private set; }
-        public DynModifier Modifier { get; private set; }
+        public Modifier<dynamic> Modifier { get; private set; }
 
         protected ODataQuerier<string> ODataQuerier;
 
@@ -30,7 +30,7 @@ namespace XData.Data.Services
         public JsonService(string name, IEnumerable<KeyValuePair<string, string>> keyValues)
             : base(name, keyValues)
         {
-            Modifier = DynModifier.Create(name);
+            Modifier = DynModifierFactory.Create(name);
             Database = Modifier.Database;
             ODataQuerier = ODataQuerier<string>.Create(Name, Schema);
         }

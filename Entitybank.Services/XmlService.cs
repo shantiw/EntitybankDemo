@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using XData.Data.Modification;
 using XData.Data.Objects;
 using XData.Data.OData;
 using XData.Data.Schema;
@@ -15,7 +16,7 @@ namespace XData.Data.Services
     public partial class XmlService : DataService
     {
         public Database<XElement> Database { get; private set; }
-        public XmlModifier Modifier { get; private set; }
+        public Modifier<XElement> Modifier { get; private set; }
 
         protected ODataQuerier<XElement> ODataQuerier;
 
@@ -27,7 +28,7 @@ namespace XData.Data.Services
         public XmlService(string name, IEnumerable<KeyValuePair<string, string>> keyValues)
             : base(name, keyValues)
         {
-            Modifier = XmlModifier.Create(name);
+            Modifier = XmlModifierFactory.Create(name);
             Database = Modifier.Database;
             ODataQuerier = ODataQuerier<XElement>.Create(Name, Schema);
         }
