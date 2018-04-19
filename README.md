@@ -1,2 +1,2 @@
-# EntitybankDemo
-Entitybank Demo
+# EntitybankDemonstration
+Entitybank Demonstration
