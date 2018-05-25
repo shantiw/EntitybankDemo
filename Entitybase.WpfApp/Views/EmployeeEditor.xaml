@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:XData.Windows.Views"
         xmlns:cs="clr-namespace:XData.Windows.Interactivity"
-        xmlns:m="clr-namespace:XData.Client.Models;assembly=Entitybank.Client"
+        xmlns:m="clr-namespace:XData.Client.Models;assembly=Entitybase.Client"
         mc:Ignorable="d"
         cs:WindowAttachedProperties.DialogResult="{Binding DialogResult}"
         Title="Employee" Height="380" Width="600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">

@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:XData.Windows.Views"
              xmlns:da="clr-namespace:XData.Windows.Data"
-             xmlns:m="clr-namespace:XData.Client.Models;assembly=Entitybank.Client"
+             xmlns:m="clr-namespace:XData.Client.Models;assembly=Entitybase.Client"
              mc:Ignorable="d"
              d:DesignHeight="600" d:DesignWidth="1000">
     <UserControl.Resources>

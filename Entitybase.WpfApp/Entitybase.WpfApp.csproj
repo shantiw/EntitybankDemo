@@ -7,7 +7,7 @@
     <ProjectGuid>{18B172D5-FFC3-4E6E-9F30-6EABB021E9A4}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>XData.Windows</RootNamespace>
-    <AssemblyName>Entitybank.WpfApp</AssemblyName>
+    <AssemblyName>Entitybase.WpfApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -155,13 +155,13 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Entitybank.Client\Entitybank.Client.csproj">
+    <ProjectReference Include="..\Entitybase.Client\Entitybase.Client.csproj">
       <Project>{3f9132e9-f0f7-4c9e-9db8-c703bbb4718e}</Project>
-      <Name>Entitybank.Client</Name>
+      <Name>Entitybase.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Entitybank.Commons\Entitybank.Commons.csproj">
+    <ProjectReference Include="..\Entitybase.Commons\Entitybase.Commons.csproj">
       <Project>{0E7DFB01-2F5B-4507-9AD0-64C4AFD1BD9E}</Project>
-      <Name>Entitybank.Commons</Name>
+      <Name>Entitybase.Commons</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

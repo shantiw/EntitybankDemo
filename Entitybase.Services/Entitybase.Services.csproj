@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Entitybank, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Entitybank.1.0.3\lib\net461\Entitybank.dll</HintPath>
+    <Reference Include="Entitybase, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Entitybase.1.1.0\lib\net461\Entitybase.dll</HintPath>
     </Reference>
     <Reference Include="Evaluator">
       <HintPath>..\Evaluator.dll</HintPath>
