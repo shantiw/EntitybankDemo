@@ -5,23 +5,23 @@
 /.vs
 /packages
 
-/Entitybank.Services/obj
-/Entitybank.Services/bin
+/Entitybase.Services/obj
+/Entitybase.Services/bin
 
-/Entitybank.WebApp/bin
-/Entitybank.WebApp/obj
-/Entitybank.WebApp/log
+/Entitybase.WebApp/bin
+/Entitybase.WebApp/obj
+/Entitybase.WebApp/log
 
-/Entitybank.Commons/bin
-/Entitybank.Commons/obj
+/Entitybase.Commons/bin
+/Entitybase.Commons/obj
 
-/Entitybank.Client/bin
-/Entitybank.Client/obj
+/Entitybase.Client/bin
+/Entitybase.Client/obj
 
-/Entitybank.WpfApp/obj
-/Entitybank.WpfApp/bin
+/Entitybase.WpfApp/obj
+/Entitybase.WpfApp/bin
 
-/Entitybank.WebApp.dev.sln
-/Entitybank.Services/Entitybank.Services.dev.csproj
-/Entitybank.WebApp/Entitybank.WebApp.dev.csproj
+/Entitybase.WebApp.dev.sln
+/Entitybase.Services/Entitybase.Services.dev.csproj
+/Entitybase.WebApp/Entitybase.WebApp.dev.csproj
 

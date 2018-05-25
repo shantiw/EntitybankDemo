@@ -14,7 +14,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XData.Web</RootNamespace>
-    <AssemblyName>Entitybank.WebApp</AssemblyName>
+    <AssemblyName>Entitybase.WebApp</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -222,28 +222,29 @@
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="entitybank\global.config" />
-    <Content Include="entitybank\my\deltas\delta1.config" />
-    <Content Include="entitybank\my\deltas\delta2.config" />
-    <Content Include="entitybank\my\instance.config" />
-    <Content Include="entitybank\my\mapping.config" />
-    <Content Include="entitybank\my\revise.config" />
-    <Content Include="entitybank\ora\deltas\delta1.config" />
-    <Content Include="entitybank\ora\deltas\delta2.config" />
-    <Content Include="entitybank\ora\instance.config" />
-    <Content Include="entitybank\ora\mapping.config" />
-    <Content Include="entitybank\ora\revise.config" />
+    <Content Include="entitybase\global.config" />
+    <Content Include="entitybase\my\deltas\delta1.config" />
+    <Content Include="entitybase\my\deltas\delta2.config" />
+    <Content Include="entitybase\my\instance.config" />
+    <Content Include="entitybase\my\mapping.config" />
+    <Content Include="entitybase\my\revise.config" />
+    <Content Include="entitybase\ora\deltas\delta1.config" />
+    <Content Include="entitybase\ora\deltas\delta2.config" />
+    <Content Include="entitybase\ora\instance.config" />
+    <Content Include="entitybase\ora\mapping.config" />
+    <Content Include="entitybase\ora\revise.config" />
+    <Content Include="entitybase\sql\datasources\ds.config" />
+    <Content Include="entitybase\sql\datasources\employees.config" />
+    <Content Include="entitybase\sql\datasources\roles.config" />
+    <Content Include="entitybase\sql\datasources\securityLog.config" />
+    <Content Include="entitybase\sql\datasources\users.config" />
+    <Content Include="entitybase\sql\deltas\security.config" />
+    <Content Include="entitybase\sql\instance.config" />
+    <Content Include="entitybase\sql\mapping.config" />
+    <Content Include="entitybase\sql\revise.config" />
     <None Include="Wiki\delta1.config" />
-    <Content Include="entitybank\sql\instance.config" />
-    <Content Include="entitybank\sql\mapping.config" />
-    <Content Include="entitybank\sql\revise.config" />
-    <Content Include="entitybank\sql\datasources\roles.config">
-      <SubType>Designer</SubType>
-    </Content>
     <Content Include="Scripts\bootstrapValidator.js" />
     <Content Include="Scripts\bootstrapValidator.min.js" />
-    <Content Include="entitybank\sql\datasources\employees.config" />
-    <Content Include="entitybank\sql\datasources\ds.config" />
     <Content Include="Content\_bootstrap-datetimepicker.less" />
     <Content Include="Content\bootstrap-datetimepicker-build.less" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
@@ -321,10 +322,7 @@
     <Content Include="Content\bootstrap\bootstrap.less" />
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
-    <Content Include="entitybank\sql\datasources\users.config" />
-    <Content Include="entitybank\sql\datasources\securityLog.config" />
     <Content Include="Views\SecurityLog\Details.cshtml" />
-    <Content Include="entitybank\sql\deltas\security.config" />
     <None Include="Wiki\error.json" />
     <None Include="Wiki\error.xml" />
     <None Include="Scripts\jquery-3.2.1.intellisense.js" />
@@ -393,20 +391,20 @@
     <None Include="Wiki\revise.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="entitybank\my\datasources\" />
-    <Folder Include="entitybank\ora\datasources\" />
+    <Folder Include="entitybase\my\datasources\" />
+    <Folder Include="entitybase\ora\datasources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Entitybank.Commons\Entitybank.Commons.csproj">
+    <ProjectReference Include="..\Entitybase.Commons\Entitybase.Commons.csproj">
       <Project>{0e7dfb01-2f5b-4507-9ad0-64c4afd1bd9e}</Project>
-      <Name>Entitybank.Commons</Name>
+      <Name>Entitybase.Commons</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Entitybank.Services\Entitybank.Services.csproj">
+    <ProjectReference Include="..\Entitybase.Services\Entitybase.Services.csproj">
       <Project>{e0c5aa02-95bf-4e33-aa8e-4158c2c4d2d7}</Project>
-      <Name>Entitybank.Services</Name>
+      <Name>Entitybase.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

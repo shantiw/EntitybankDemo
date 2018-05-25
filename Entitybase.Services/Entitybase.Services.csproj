@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>XData.Data.Services</RootNamespace>
-    <AssemblyName>Entitybank.WebApp.Services</AssemblyName>
+    <AssemblyName>Entitybase.WebApp.Services</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -68,9 +68,9 @@
     <Compile Include="XmlService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Entitybank.Commons\Entitybank.Commons.csproj">
+    <ProjectReference Include="..\Entitybase.Commons\Entitybase.Commons.csproj">
       <Project>{0e7dfb01-2f5b-4507-9ad0-64c4afd1bd9e}</Project>
-      <Name>Entitybank.Commons</Name>
+      <Name>Entitybase.Commons</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
